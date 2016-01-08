@@ -1,0 +1,24 @@
+{
+  "name": "delboy1978uk/user",
+  "description": "A persistable user object",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Derek Stephen McLean",
+      "email": "delboy1978uk@gmail.com"
+    }
+  ],
+  "require": {
+    "delboy1978uk/common": "2.1.1",
+    "delboy1978uk/person": "3.0.0",
+    "zendframework/zend-crypt": "2.5.2"
+  },
+  "require-dev": {
+    "codeception/codeception": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Del\\": "src/"
+    }
+  }
+}
