@@ -24,7 +24,7 @@ class User
     private $email;
 
     /**
-     * @OneToOne(targetEntity="Del\Entity\Person",inversedBy="user")
+     * @OneToOne(targetEntity="Del\Entity\Person",cascade={"persist"})
      */
     private $person;
 

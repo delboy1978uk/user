@@ -21,6 +21,7 @@ extras/documentation
 
 #ide
 .idea/
+.DS_Store
 
 #test output
 tests/_output

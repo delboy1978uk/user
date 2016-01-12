@@ -29,7 +29,6 @@ class UserRepositoryTest extends Test
         $config = new UserPackage();
         $svc->registerToContainer($config);
         $container = $svc->getContainer();
-
         $this->db = $container['repository.user'];
     }
 
@@ -40,8 +39,13 @@ class UserRepositoryTest extends Test
 
     public function testPersistAndRetrieveUser()
     {
+        $em = ContainerService::getInstance()->getContainer()['doctrine.entity_manager'];
+
         $god = new Person();
         $god->setAka('God');
+
+        $em->persist($god);
+
         $user = new User();
         $user->setEmail('god@work.com');
         $user->setRegistrationDate(new DateTime('1970-01-01'));
@@ -64,7 +68,7 @@ class UserRepositoryTest extends Test
         $this->assertEquals(State::STATE_ACTIVATED,$user->getState()->getValue());
 
         $this->db->delete($user);
-        $this->db->delete($god);
+        $em->remove($god);
         $this->assertNull($this->db->find($id));
     }
 
