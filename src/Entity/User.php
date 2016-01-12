@@ -20,7 +20,7 @@ class User
     private $id;
 
     /**
-     * @Id @Column(type="string",length=50)
+     * @Column(type="string",length=50)
      */
     private $email;
 
