@@ -22,6 +22,7 @@ class State
         if(!in_array($val, [self::STATE_UNACTIVATED, self::STATE_ACTIVATED, self::STATE_DISABLED, self::STATE_SUSPENDED, self::STATE_BANNED])) {
             throw new InvalidArgumentException('Value is invalid');
         }
+        $this->value = $val;
     }
 
     /**

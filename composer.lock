@@ -36,16 +36,16 @@
         },
         {
             "name": "delboy1978uk/common",
-            "version": "v2.1.5",
+            "version": "v2.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/delboy1978uk/common.git",
-                "reference": "79d9d80aacf91237072dea9f16d52200d48f5f5a"
+                "reference": "4966ad3aed23115905d0b987f0838fe5d7ef1d14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/delboy1978uk/common/zipball/79d9d80aacf91237072dea9f16d52200d48f5f5a",
-                "reference": "79d9d80aacf91237072dea9f16d52200d48f5f5a",
+                "url": "https://api.github.com/repos/delboy1978uk/common/zipball/4966ad3aed23115905d0b987f0838fe5d7ef1d14",
+                "reference": "4966ad3aed23115905d0b987f0838fe5d7ef1d14",
                 "shasum": ""
             },
             "require": {
@@ -77,7 +77,7 @@
                 }
             ],
             "description": "Stuff that winds up in every project",
-            "time": "2016-01-12 03:35:13"
+            "time": "2016-01-12 04:15:55"
         },
         {
             "name": "delboy1978uk/country",
@@ -153,16 +153,16 @@
         },
         {
             "name": "delboy1978uk/person",
-            "version": "v3.0.0",
+            "version": "v3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/delboy1978uk/person.git",
-                "reference": "ac1a765f8fe4806e01dd3e9e82708a8f9c2b65c9"
+                "reference": "878381a97897cdc11bfaf945f689988a242ac63d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/delboy1978uk/person/zipball/ac1a765f8fe4806e01dd3e9e82708a8f9c2b65c9",
-                "reference": "ac1a765f8fe4806e01dd3e9e82708a8f9c2b65c9",
+                "url": "https://api.github.com/repos/delboy1978uk/person/zipball/878381a97897cdc11bfaf945f689988a242ac63d",
+                "reference": "878381a97897cdc11bfaf945f689988a242ac63d",
                 "shasum": ""
             },
             "require": {
@@ -190,7 +190,7 @@
                 }
             ],
             "description": "A persistable person entity, repository, and service.",
-            "time": "2016-01-07 04:54:12"
+            "time": "2016-01-12 04:20:44"
         },
         {
             "name": "doctrine/annotations",

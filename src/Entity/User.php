@@ -7,8 +7,7 @@ use Del\Entity\Person;
 use Del\Value\User\State;
 
 /**
- * @Entity(repositoryClass="PR_Repository_User")
- * @ORM\Table(name="PR_Entity_User")
+ * @Entity(repositoryClass="Del\Repository\User")
  */
 class User
 {
@@ -25,7 +24,7 @@ class User
     private $email;
 
     /**
-     *  @OneToOne(targetEntity="Del\Entity\Person",inversedBy="user")
+     * @OneToOne(targetEntity="Del\Entity\Person",inversedBy="user")
      */
     private $person;
 
