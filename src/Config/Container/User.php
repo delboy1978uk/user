@@ -3,7 +3,9 @@
 namespace Del\Config\Container;
 
 use Del\Common\Container\RegistrationInterface;
+use Del\Config\Container\Person as PersonPackage;
 use Del\Repository\User as UserRepository;
+use Del\Service\Person;
 use Del\Service\User as UserService;
 use Doctrine\ORM\EntityManager;
 use Pimple\Container;
@@ -15,6 +17,8 @@ class User implements RegistrationInterface
      */
     public function addToContainer(Container $c)
     {
+        $personPackage = new PersonPackage();
+        $personPackage->addToContainer($c);
         $this->addUserRepository($c);
         $this->addUserService($c);
     }
