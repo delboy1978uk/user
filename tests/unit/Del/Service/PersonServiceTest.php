@@ -26,7 +26,7 @@ class UserServiceTest extends Test
     {
         $container = ContainerService::getInstance()
             ->getContainer();
-        $this->svc = new UserService($container['doctrine.entity_manager']);
+        $this->svc = new UserService($container['doctrine.entity_manager'], $container['service.person']);
     }
 
     protected function _after()
