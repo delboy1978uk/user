@@ -3,21 +3,28 @@
 namespace Del\Service;
 
 use DateTime;
+use Del\Criteria\UserCriteria;
 use Del\Entity\Person;
 use Del\Entity\User as UserEntity;
+use Del\Exception\UserException;
 use Del\Repository\User as UserRepository;
+use Del\Service\Person as PersonService;
 use Del\Value\User\State;
 use Doctrine\ORM\EntityManager;
-use Pimple\Container;
+use InvalidArgumentException;
 
 class User
 {
     /** @var EntityManager $em */
     protected $em;
 
-    public function __construct(EntityManager $em)
+    /** @var  PersonService */
+    private $personSvc;
+
+    public function __construct(EntityManager $em, PersonService $personSvc)
     {
         $this->em = $em;
+        $this->personSvc = $personSvc;
     }
 
    /** 
@@ -72,5 +79,32 @@ class User
     protected function getRepository()
     {
         return $this->em->getRepository('Del\Entity\User');
+    }
+
+    public function registerUser(array $data)
+    {
+        if (!$data['email'] || !$data['password'] || !$data['confirm']) {
+            throw new InvalidArgumentException();
+        }
+        if ($data['password'] !== $data['confirm']) {
+            throw new UserException(UserException::WRONG_PASSWORD);
+        }
+
+        $criteria = new UserCriteria();
+        $criteria->setEmail($data['email']);
+        $user = $this->getRepository()->findByCriteria($criteria);
+        if(!is_null($user)) {
+            throw new UserException(UserException::USER_EXISTS);
+        }
+
+        $person = new Person();
+        $user = new UserEntity();
+        $state = new State(State::STATE_UNACTIVATED);
+        $user->setPerson($person)
+             ->setEmail($data['email'])
+             ->setRegistrationDate(new DateTime())
+             ->setState($state);
+
+
     }
 }
