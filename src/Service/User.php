@@ -7,6 +7,7 @@ use Del\Criteria\UserCriteria;
 use Del\Entity\EmailLink;
 use Del\Entity\Person;
 use Del\Entity\User as UserEntity;
+use Del\Exception\EmailLinkException;
 use Del\Exception\UserException;
 use Del\Repository\User as UserRepository;
 use Del\Service\Person as PersonService;
@@ -150,11 +151,22 @@ class User
     }
 
     /**
+     * @param $email
      * @param $token
-     * @return EmailLink|null
+     * @throws EmailLinkException
      */
-    public function findEmailLinkByToken($token)
+    public function findEmailLink($email, $token)
     {
-        return $this->getEmailLinkRepository()->findByToken($token);
+        $link = $this->getEmailLinkRepository()->findByToken($token);
+        if(!$link) {
+            throw new EmailLinkException(EmailLinkException::LINK_NOT_FOUND);
+        }
+        if($link->getUser()->getEmail() != $email) {
+            throw new EmailLinkException(EmailLinkException::LINK_NO_MATCH);
+        }
+        if($link->getExpiryDate() < new DateTime()) {
+            throw new EmailLinkException(EmailLinkException::LINK_EXPIRED);
+        }
+        return $link;
     }
 }

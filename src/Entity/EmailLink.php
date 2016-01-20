@@ -47,7 +47,7 @@ class EmailLink
     }
 
     /**
-     * @return mixed
+     * @return User
      */
     public function getUser()
     {
@@ -55,7 +55,7 @@ class EmailLink
     }
 
     /**
-     * @param mixed $user
+     * @param User $user
      * @return EmailLink
      */
     public function setUser($user)

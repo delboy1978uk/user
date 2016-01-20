@@ -2,8 +2,9 @@
 
 namespace Del\Exception;
 
+use Exception;
 
-class EmailLinkException
+class EmailLinkException extends Exception
 {
     const LINK_NOT_FOUND = 'A matching email link was not found';
     const LINK_EXPIRED = 'A matching email link was not found';
