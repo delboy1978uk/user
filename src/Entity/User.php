@@ -3,7 +3,6 @@
 namespace Del\Entity;
 
 use DateTime;
-use Del\Entity\Person;
 use Del\Value\User\State;
 
 /**
@@ -49,11 +48,6 @@ class User
      */
     private $lastLoginDate;
 
-    /**
-     * @Column(type="string",length=10, nullable=true)
-     * @var string
-     */
-    private $token;
 
     public function __construct()
     {
@@ -168,24 +162,5 @@ class User
         $this->lastLoginDate = $lastLogin;
         return $this;
     }
-
-    /**
-     * @return string
-     */
-    public function getToken()
-    {
-        return $this->token;
-    }
-
-    /**
-     * @param string $token
-     * @return User
-     */
-    public function setToken($token)
-    {
-        $this->token = $token;
-        return $this;
-    }
-
 
 }

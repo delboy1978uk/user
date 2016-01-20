@@ -4,6 +4,7 @@ namespace Del\Service;
 
 use DateTime;
 use Del\Criteria\UserCriteria;
+use Del\Entity\EmailLink;
 use Del\Entity\Person;
 use Del\Entity\User as UserEntity;
 use Del\Exception\UserException;
@@ -12,6 +13,7 @@ use Del\Service\Person as PersonService;
 use Del\Value\User\State;
 use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
+use Zend\Crypt\Password\Bcrypt;
 
 class User
 {
@@ -70,15 +72,23 @@ class User
      */
     public function saveUser(UserEntity $user)
     {
-        return $this->getRepository()->save($user);
+        return $this->getUserRepository()->save($user);
     }
 
    /**
     * @return UserRepository
     */
-    protected function getRepository()
+    private function getUserRepository()
     {
         return $this->em->getRepository('Del\Entity\User');
+    }
+
+    /**
+     * @return \Del\Repository\EmailLink
+     */
+    private function getEmailLinkRepository()
+    {
+        return $this->em->getRepository('Del\Entity\EmailLink');
     }
 
     public function registerUser(array $data)
@@ -92,8 +102,8 @@ class User
 
         $criteria = new UserCriteria();
         $criteria->setEmail($data['email']);
-        $user = $this->getRepository()->findByCriteria($criteria);
-        if(!is_null($user)) {
+        $user = $this->getUserRepository()->findByCriteria($criteria);
+        if(!empty($user)) {
             throw new UserException(UserException::USER_EXISTS);
         }
 
@@ -105,6 +115,46 @@ class User
              ->setRegistrationDate(new DateTime())
              ->setState($state);
 
+        $bcrypt = new Bcrypt();
+        $bcrypt->setCost(14);
 
+        $encryptedPassword = $bcrypt->create($data['password']);
+        $user->setPassword($encryptedPassword);
+
+        $this->saveUser($user);
+        return $user;
+    }
+
+    /**
+     * @param UserEntity $user
+     * @param int $expiry_days
+     */
+    public function generateEmailLink(UserEntity $user, $expiry_days = 7)
+    {
+        $date = new DateTime();
+        $date->modify('+'.$expiry_days.' days');
+        $token = md5(uniqid(rand(), true));
+        $link = new EmailLink();
+        $link->setUser($user);
+        $link->setToken($token);
+        $link->setExpiryDate($date);
+        return $this->getEmailLinkRepository()->save($link);
+    }
+
+    /**
+     * @param EmailLink $link
+     */
+    public function deleteEmailLink(EmailLink $link)
+    {
+        $this->getEmailLinkRepository()->delete($link);
+    }
+
+    /**
+     * @param $token
+     * @return EmailLink|null
+     */
+    public function findEmailLinkByToken($token)
+    {
+        return $this->getEmailLinkRepository()->findByToken($token);
     }
 }
