@@ -169,4 +169,47 @@ class User
         }
         return $link;
     }
+
+    /**
+     * @param string $email
+     * @param string $password
+     * @return int
+     * @throws UserException
+     */
+    function authenticate($email, $password)
+    {
+        $criteria = new UserCriteria();
+        $criteria->setEmail($email);
+
+        /** @var UserEntity $user  */
+        $user = $this->getUserRepository()->findByCriteria($criteria)[0];
+
+        if(!$user) {
+            throw new UserException(UserException::USER_NOT_FOUND);
+        }
+
+        switch($user->getState()->getValue()) {
+            case State::STATE_UNACTIVATED :
+                throw new UserException(UserException::USER_UNACTIVATED);
+                break;
+            case State::STATE_DISABLED :
+            case State::STATE_SUSPENDED :
+                throw new UserException(UserException::USER_DISABLED);
+                break;
+            case State::STATE_BANNED :
+                throw new UserException(UserException::USER_BANNED);
+                break;
+
+        }
+
+        $bcrypt = new Bcrypt();
+        $bcrypt->setCost(14);
+
+        if(!$bcrypt->verify($password, $user->getPassword()))
+        {
+            throw new UserException(UserException::WRONG_PASSWORD);
+        }
+
+        return $user->getID();
+    }
 }
