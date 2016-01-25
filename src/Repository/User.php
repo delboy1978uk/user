@@ -38,6 +38,7 @@ class User extends EntityRepository
         if($criteria->hasEmail()) {
             $qb->where('u.email = :email');
             $qb->setParameter('email', $criteria->getEmail());
+            $criteria->setLimit(1);
         }
 
         if($criteria->hasState()) {
@@ -60,6 +61,7 @@ class User extends EntityRepository
         $criteria->hasOffset() ? $qb->setFirstResult($criteria->getOffset()) : null;
 
         $query = $qb->getQuery();
+
         return $query->getResult();
     }
 }

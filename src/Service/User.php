@@ -76,6 +76,30 @@ class User
         return $this->getUserRepository()->save($user);
     }
 
+    /**
+     * @param int $id
+     * @return UserEntity|null
+     */
+    public function findUserById($id)
+    {
+        $criteria = new UserCriteria();
+        $criteria->setId($id);
+        $results = $this->getUserRepository()->findByCriteria($criteria);
+        return (count($results)) ? $results[0] : null;
+    }
+
+    /**
+     * @param string $email
+     * @return UserEntity|null
+     */
+    public function findUserByEmail($email)
+    {
+        $criteria = new UserCriteria();
+        $criteria->setEmail($email);
+        $result = $this->getUserRepository()->findByCriteria($criteria);
+        return count($result) ? $result[0] : null;
+    }
+
    /**
     * @return UserRepository
     */
@@ -128,6 +152,23 @@ class User
 
     /**
      * @param UserEntity $user
+     * @param $password
+     * @return UserEntity
+     */
+    public function changePassword(UserEntity $user, $password)
+    {
+        $bcrypt = new Bcrypt();
+        $bcrypt->setCost(14);
+
+        $encryptedPassword = $bcrypt->create($password);
+        $user->setPassword($encryptedPassword);
+
+        $this->saveUser($user);
+        return $user;
+    }
+
+    /**
+     * @param UserEntity $user
      * @param int $expiry_days
      */
     public function generateEmailLink(UserEntity $user, $expiry_days = 7)
@@ -147,6 +188,8 @@ class User
      */
     public function deleteEmailLink(EmailLink $link)
     {
+        /** @var EmailLink $link */
+        $link = $this->em->merge($link);
         $this->getEmailLinkRepository()->delete($link);
     }
 

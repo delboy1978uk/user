@@ -39,6 +39,6 @@ class EmailLink extends EntityRepository
 
         $query = $qb->getQuery();
         $result = $query->getResult();
-        return empty($result) ? null : $result[0];
+        return count($result) ? $result[0] : null;
     }
 }

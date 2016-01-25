@@ -23,10 +23,37 @@ class UserCriteria extends CommonCriteria
     const ORDER_LAST_LOGIN_DATE_DESC       = 'lastLoginDate_desc';
     const ORDER_LAST_LOGIN_DATE            = 'lastLoginDate';
 
+    protected $id;
     protected $email;
     protected $state;
     protected $registrationDate;
     protected $lastLoginDate;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = (int) $id;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasId()
+    {
+        return $this->id != null;
+    }
 
     /**
      * @return mixed

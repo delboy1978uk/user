@@ -6,6 +6,8 @@ use Exception;
 
 class UserException extends Exception
 {
+    const UNAUTHORISED = 'You are not allowed to perform this action.';
+    const USER_ACTIVATED = 'This user is already activated.';
     const USER_EXISTS = 'A user already exists.';
     const USER_NOT_FOUND = 'No user account was found.';
     const USER_UNACTIVATED = 'This account has not been activated.';
