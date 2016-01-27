@@ -255,4 +255,14 @@ class User
 
         return $user->getID();
     }
+
+
+    public function checkPassword(UserEntity $user, $password)
+    {
+        $bcrypt = new Bcrypt();
+        $bcrypt->setCost(14);
+
+        return $bcrypt->verify($password, $user->getPassword());
+    }
+
 }
