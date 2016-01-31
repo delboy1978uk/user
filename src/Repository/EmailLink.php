@@ -13,6 +13,7 @@ class EmailLink extends EntityRepository
      */
     public function save(EmailLinkEntity $link)
     {
+        $this->_em->merge($link->getUser());
         $this->_em->merge($link);
         $this->_em->flush();
         return $link;

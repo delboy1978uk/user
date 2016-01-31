@@ -18,12 +18,12 @@ class User
     private $id;
 
     /**
-     * @Column(type="string",length=50)
+     * @Column(type="string",length=50,uniqueConstraints={@UniqueConstraint(name="email_idx", columns={"email"})})
      */
     private $email;
 
     /**
-     * @OneToOne(targetEntity="Del\Entity\Person",cascade={"persist"})
+     * @OneToOne(targetEntity="Del\Entity\Person",cascade={"merge"})
      */
     private $person;
 

@@ -146,7 +146,7 @@ class User
         $encryptedPassword = $bcrypt->create($data['password']);
         $user->setPassword($encryptedPassword);
 
-        $this->saveUser($user);
+        $user = $this->saveUser($user);
         return $user;
     }
 
