@@ -14,7 +14,7 @@ class EmailLink
     private $id;
 
     /**
-     *  @ManyToOne(targetEntity="Del\Entity\User",cascade={"persist"})
+     *  @ManyToOne(targetEntity="Del\Entity\User",cascade={"merge"})
      */
     private $user;
 
@@ -29,7 +29,7 @@ class EmailLink
     private $token;
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getId()
     {
@@ -37,7 +37,7 @@ class EmailLink
     }
 
     /**
-     * @param mixed $id
+     * @param int $id
      * @return EmailLink
      */
     public function setId($id)

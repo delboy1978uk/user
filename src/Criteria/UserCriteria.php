@@ -9,7 +9,7 @@ class UserCriteria extends CommonCriteria
 {
     const ORDER_EMAIL_ASC        = 'email_asc';
     const ORDER_EMAIL_DESC       = 'email_desc';
-    const ORDER_BEDROOMS            = 'numBedrooms';
+    const ORDER_EMAIL            = 'email';
 
     const ORDER_STATE_ASC        = 'state_asc';
     const ORDER_STATE_DESC       = 'state_desc';

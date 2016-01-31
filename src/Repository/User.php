@@ -14,6 +14,7 @@ class User extends EntityRepository
      */
     public function save(UserEntity $user)
     {
+        $user = $this->_em->merge($user);
         $this->_em->persist($user);
         $this->_em->flush();
         return $user;
