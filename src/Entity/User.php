@@ -7,6 +7,7 @@ use Del\Value\User\State;
 
 /**
  * @Entity(repositoryClass="Del\Repository\User")
+ * @Table(name="User",uniqueConstraints={@UniqueConstraint(name="email_idx", columns={"email"})})
  */
 class User
 {
@@ -18,7 +19,7 @@ class User
     private $id;
 
     /**
-     * @Column(type="string",length=50,uniqueConstraints={@UniqueConstraint(name="email_idx", columns={"email"})})
+     * @Column(type="string",length=50)
      */
     private $email;
 
