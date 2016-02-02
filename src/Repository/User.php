@@ -36,6 +36,12 @@ class User extends EntityRepository
     {
         $qb = $this->createQueryBuilder('u');
 
+        if($criteria->hasId()) {
+            $qb->where('u.id = :id');
+            $qb->setParameter('id', $criteria->getId());
+            $criteria->setLimit(1);
+        }
+
         if($criteria->hasEmail()) {
             $qb->where('u.email = :email');
             $qb->setParameter('email', $criteria->getEmail());
