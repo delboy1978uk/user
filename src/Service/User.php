@@ -256,7 +256,20 @@ class User
         return $user->getID();
     }
 
+    /**
+     * @param UserCriteria $criteria
+     * @return array
+     */
+    public function findByCriteria(UserCriteria $criteria)
+    {
+        return $this->findByCriteria($criteria);
+    }
 
+    /**
+     * @param UserEntity $user
+     * @param $password
+     * @return bool
+     */
     public function checkPassword(UserEntity $user, $password)
     {
         $bcrypt = new Bcrypt();

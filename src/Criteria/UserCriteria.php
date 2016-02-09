@@ -7,20 +7,10 @@ use Del\Common\Criteria as CommonCriteria;
 
 class UserCriteria extends CommonCriteria
 {
-    const ORDER_EMAIL_ASC        = 'email_asc';
-    const ORDER_EMAIL_DESC       = 'email_desc';
-    const ORDER_BEDROOMS            = 'numBedrooms';
-
-    const ORDER_STATE_ASC        = 'state_asc';
-    const ORDER_STATE_DESC       = 'state_desc';
-    const ORDER_STATE            = 'state';
-
-    const ORDER_REG_DATE_ASC        = 'registrationDate_asc';
-    const ORDER_REG_DATE_DESC       = 'registrationDate_desc';
-    const ORDER_REG_DATE            = 'registrationDate';
-
-    const ORDER_LAST_LOGIN_DATE_ASC        = 'lastLoginDate_asc';
-    const ORDER_LAST_LOGIN_DATE_DESC       = 'lastLoginDate_desc';
+    const ORDER_ID        = 'id';
+    const ORDER_EMAIL        = 'email';
+    const ORDER_STATE        = 'state';
+    const ORDER_REG_DATE       = 'registrationDate';
     const ORDER_LAST_LOGIN_DATE            = 'lastLoginDate';
 
     protected $id;
