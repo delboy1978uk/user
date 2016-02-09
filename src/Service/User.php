@@ -262,7 +262,7 @@ class User
      */
     public function findByCriteria(UserCriteria $criteria)
     {
-        return $this->findByCriteria($criteria);
+        return $this->getUserRepository()->findByCriteria($criteria);
     }
 
     /**

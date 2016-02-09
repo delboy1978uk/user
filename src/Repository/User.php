@@ -56,7 +56,7 @@ class User extends EntityRepository
             $qb->setParameter('lastlogin', $criteria->getLastLoginDate());
         }
 
-        $criteria->hasOrder() ? $qb->addOrderBy($criteria->getOrder()) : null;
+        $criteria->hasOrder() ? $qb->addOrderBy('u.'.$criteria->getOrder(),$criteria->getOrderDirection()) : null;
         $criteria->hasLimit() ? $qb->setMaxResults($criteria->getLimit()) : null;
         $criteria->hasOffset() ? $qb->setFirstResult($criteria->getOffset()) : null;
 
