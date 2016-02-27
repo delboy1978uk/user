@@ -24,7 +24,6 @@ class UserTest extends \Codeception\TestCase\Test
 
     protected function _after()
     {
-        // unset the user class after each test
         unset($this->user);
     }
 

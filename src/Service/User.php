@@ -118,7 +118,7 @@ class User
 
     public function registerUser(array $data)
     {
-        if (!$data['email'] || !$data['password'] || !$data['confirm']) {
+        if (!isset($data['email']) || !isset($data['password']) || !isset($data['confirm'])) {
             throw new InvalidArgumentException();
         }
         if ($data['password'] !== $data['confirm']) {
@@ -194,6 +194,16 @@ class User
     }
 
     /**
+     * @param UserEntity $user
+     */
+    public function deleteUser(UserEntity $user)
+    {
+        /** @var User $user */
+        $user = $this->em->merge($user);
+        $this->getUserRepository()->delete($user);
+    }
+
+    /**
      * @param $email
      * @param $token
      * @throws EmailLinkException
@@ -224,12 +234,14 @@ class User
         $criteria = new UserCriteria();
         $criteria->setEmail($email);
 
-        /** @var UserEntity $user  */
-        $user = $this->getUserRepository()->findByCriteria($criteria)[0];
+        $user = $this->getUserRepository()->findByCriteria($criteria);
 
-        if(!$user) {
+        if(empty($user)) {
             throw new UserException(UserException::USER_NOT_FOUND);
         }
+
+        /** @var UserEntity $user  */
+        $user = $user[0];
 
         switch($user->getState()->getValue()) {
             case State::STATE_UNACTIVATED :

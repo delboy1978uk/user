@@ -2,6 +2,8 @@
 
 namespace Del\Entity;
 
+use DateTime;
+
 /**
  * @Entity(repositoryClass="Del\Repository\EmailLink")
  */
@@ -65,7 +67,7 @@ class EmailLink
     }
 
     /**
-     * @return mixed
+     * @return DateTime
      */
     public function getExpiryDate()
     {
@@ -73,10 +75,10 @@ class EmailLink
     }
 
     /**
-     * @param mixed $expiry_date
+     * @param DateTime $expiry_date
      * @return EmailLink
      */
-    public function setExpiryDate($expiry_date)
+    public function setExpiryDate(DateTime $expiry_date)
     {
         $this->expiry_date = $expiry_date;
         return $this;

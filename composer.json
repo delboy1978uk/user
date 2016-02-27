@@ -10,14 +10,16 @@
   ],
   "require": {
     "delboy1978uk/person": "3.*",
-    "zendframework/zend-crypt": "2.5.2"
+    "zendframework/zend-crypt": "2.5.2",
+    "behat/gherkin": "^4.4"
   },
   "require-dev": {
     "codeception/codeception": "dev-master"
   },
   "autoload": {
     "psr-4": {
-      "Del\\": "src/"
+      "Del\\": "src/",
+      "DelTesting\\": "tests/unit/Del/"
     }
   }
 }

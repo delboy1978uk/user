@@ -54,7 +54,7 @@ class User extends EntityRepository
 
         if($criteria->hasRegistrationDate()) {
             $qb->andWhere('u.registrationDate = :regdate');
-            $qb->setParameter('registrationDate', $criteria->getRegistrationDate());
+            $qb->setParameter('regdate', $criteria->getRegistrationDate());
         }
 
         if($criteria->hasLastLoginDate()) {
