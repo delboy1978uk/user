@@ -6,6 +6,11 @@ use Del\Criteria\UserCriteria;
 use Del\Entity\User as UserEntity;
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @Entity(repositoryClass="Del\Repository\User")
+ * @Table(name="User",uniqueConstraints={@UniqueConstraint(name="email_idx", columns={"email"})})
+ */
+
 class User extends EntityRepository
 {
     /**

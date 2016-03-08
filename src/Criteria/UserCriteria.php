@@ -7,11 +7,11 @@ use Del\Common\Criteria as CommonCriteria;
 
 class UserCriteria extends CommonCriteria
 {
-    const ORDER_ID        = 'id';
-    const ORDER_EMAIL        = 'email';
-    const ORDER_STATE        = 'state';
-    const ORDER_REG_DATE       = 'registrationDate';
-    const ORDER_LAST_LOGIN_DATE            = 'lastLoginDate';
+    const ORDER_ID = 'id';
+    const ORDER_EMAIL = 'email';
+    const ORDER_STATE  = 'state';
+    const ORDER_REG_DATE = 'registrationDate';
+    const ORDER_LAST_LOGIN_DATE = 'lastLoginDate';
 
     protected $id;
     protected $email;
