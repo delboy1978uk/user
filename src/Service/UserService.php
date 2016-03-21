@@ -5,18 +5,19 @@ namespace Del\Service;
 use DateTime;
 use Del\Criteria\UserCriteria;
 use Del\Entity\EmailLink;
-use Del\Entity\Person;
-use Del\Entity\User as UserEntity;
+use Del\Person\Entity\Person;
+use Del\Entity\User;
 use Del\Exception\EmailLinkException;
 use Del\Exception\UserException;
-use Del\Repository\User as UserRepository;
-use Del\Service\Person as PersonService;
+use Del\Repository\UserRepository;
+use Del\Person\Service\PersonService;
 use Del\Value\User\State;
 use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
+use Pimple\Container;
 use Zend\Crypt\Password\Bcrypt;
 
-class User
+class UserService
 {
     /** @var EntityManager $em */
     protected $em;
@@ -24,20 +25,21 @@ class User
     /** @var  PersonService */
     private $personSvc;
 
-    public function __construct(EntityManager $em, PersonService $personSvc)
+    public function __construct(Container $c)
     {
-        $this->em = $em;
-        $this->personSvc = $personSvc;
+        $this->em = $c['doctrine.entity_manager'];
+        $this->personSvc = $c['service.person'];
     }
 
    /** 
     * @param array $data
-    * @return UserEntity
+    * @return User
     */
     public function createFromArray(array $data)
     {
-        $user = new UserEntity();
-        $user->setPerson(new Person());
+        $user = new User();
+        $person = isset($data['person']) ? $data['person'] : new Person();
+        $user->setPerson($person);
         isset($data['id']) ? $user->setId($data['id']) : null;
         isset($data['email']) ? $user->setEmail($data['email']) : null;
         isset($data['password']) ? $user->setPassword($data['password']) : null;
@@ -53,7 +55,7 @@ class User
     /**
      * @return array
      */
-    public function toArray(UserEntity $user)
+    public function toArray(User $user)
     {
         return array
         (
@@ -68,17 +70,18 @@ class User
     }
 
     /**
-     * @param UserEntity $user
-     * @return UserEntity
+     * @param User $user
+     * @return User
      */
-    public function saveUser(UserEntity $user)
+    public function saveUser(User $user)
     {
+//        $this->personSvc->savePerson($user->getPerson());
         return $this->getUserRepository()->save($user);
     }
 
     /**
      * @param int $id
-     * @return UserEntity|null
+     * @return User|null
      */
     public function findUserById($id)
     {
@@ -90,7 +93,7 @@ class User
 
     /**
      * @param string $email
-     * @return UserEntity|null
+     * @return User|null
      */
     public function findUserByEmail($email)
     {
@@ -133,7 +136,7 @@ class User
         }
 
         $person = new Person();
-        $user = new UserEntity();
+        $user = new User();
         $state = new State(State::STATE_UNACTIVATED);
         $user->setPerson($person)
              ->setEmail($data['email'])
@@ -151,11 +154,11 @@ class User
     }
 
     /**
-     * @param UserEntity $user
+     * @param User $user
      * @param $password
-     * @return UserEntity
+     * @return User
      */
-    public function changePassword(UserEntity $user, $password)
+    public function changePassword(User $user, $password)
     {
         $bcrypt = new Bcrypt();
         $bcrypt->setCost(14);
@@ -168,10 +171,11 @@ class User
     }
 
     /**
-     * @param UserEntity $user
+     * @param User $user
      * @param int $expiry_days
+     * @return EmailLink
      */
-    public function generateEmailLink(UserEntity $user, $expiry_days = 7)
+    public function generateEmailLink(User $user, $expiry_days = 7)
     {
         $date = new DateTime();
         $date->modify('+'.$expiry_days.' days');
@@ -194,18 +198,17 @@ class User
     }
 
     /**
-     * @param UserEntity $user
+     * @param User $user
      */
-    public function deleteUser(UserEntity $user)
+    public function deleteUser(User $user, $deletePerson = false)
     {
-        /** @var User $user */
-        $user = $this->em->merge($user);
-        $this->getUserRepository()->delete($user);
+        $this->getUserRepository()->delete($user,$deletePerson);
     }
 
     /**
      * @param $email
      * @param $token
+     * @return EmailLink
      * @throws EmailLinkException
      */
     public function findEmailLink($email, $token)
@@ -240,7 +243,7 @@ class User
             throw new UserException(UserException::USER_NOT_FOUND);
         }
 
-        /** @var UserEntity $user  */
+        /** @var User $user  */
         $user = $user[0];
 
         switch($user->getState()->getValue()) {
@@ -278,11 +281,11 @@ class User
     }
 
     /**
-     * @param UserEntity $user
+     * @param User $user
      * @param $password
      * @return bool
      */
-    public function checkPassword(UserEntity $user, $password)
+    public function checkPassword(User $user, $password)
     {
         $bcrypt = new Bcrypt();
         $bcrypt->setCost(14);

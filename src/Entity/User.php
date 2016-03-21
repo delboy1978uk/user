@@ -4,9 +4,11 @@ namespace Del\Entity;
 
 use DateTime;
 use Del\Value\User\State;
+use Del\Person\Entity\Person;
 
 /**
- * @Entity(repositoryClass="Del\Repository\User")
+ * @Entity(repositoryClass="Del\Repository\UserRepository")
+ * @Table(name="User",uniqueConstraints={@UniqueConstraint(name="email_idx", columns={"email"})})
  */
 class User
 {
@@ -23,7 +25,7 @@ class User
     private $email;
 
     /**
-     * @OneToOne(targetEntity="Del\Entity\Person",cascade={"persist"})
+     * @OneToOne(targetEntity="Del\Person\Entity\Person",cascade="persist")
      */
     private $person;
 

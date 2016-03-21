@@ -3,33 +3,35 @@
 namespace Del\Repository;
 
 use Del\Criteria\UserCriteria;
-use Del\Entity\User as UserEntity;
+use Del\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
-/**
- * @Entity(repositoryClass="Del\Repository\User")
- * @Table(name="User",uniqueConstraints={@UniqueConstraint(name="email_idx", columns={"email"})})
- */
 
-class User extends EntityRepository
+class UserRepository extends EntityRepository
 {
     /**
-     * @param UserEntity $user
-     * @return UserEntity
+     * @param User $user
+     * @return User
      */
-    public function save(UserEntity $user)
+    public function save(User $user)
     {
-        $this->_em->persist($user);
-        $this->_em->flush();
+        if(!$user->getID()) {
+            $this->_em->persist($user);
+        }
+        $this->_em->flush($user);
+        $this->_em->flush($user->getPerson());
         return $user;
     }
     /**
-     * @param UserEntity $user
+     * @param User $user
      */
-    public function delete(UserEntity $user)
+    public function delete(User $user, $deletePerson = false)
     {
+        if($deletePerson) {
+            $this->_em->remove($user->getPerson());
+        }
         $this->_em->remove($user);
-        $this->_em->flush();
+        $this->_em->flush($user);
     }
 
     /**

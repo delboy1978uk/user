@@ -1,15 +1,17 @@
 <?php
 
-namespace Del\Repository;
+namespace DelTesting\Service;
 
 use Codeception\TestCase\Test;
-use DateTime;
-use Del\Config\Container\User as UserPackage;
+use Del\Person\Entity\Person;
+use Del\UserPackage;
 use Del\Criteria\UserCriteria;
+use Del\Entity\EmailLink;
+use Del\Entity\User;
 use Del\Exception\EmailLinkException;
 use Del\Exception\UserException;
 use Del\Factory\CountryFactory;
-use Del\Service\User as UserService;
+use Del\Service\UserService;
 use Del\Common\ContainerService;
 use Del\Value\User\State;
 
@@ -26,6 +28,12 @@ class UserServiceTest extends Test
      */
     protected $svc;
 
+    /** @var  User */
+    protected $user;
+
+    /** @var  EmailLink */
+    protected $link;
+
     protected function _before()
     {
         $svc = ContainerService::getInstance();
@@ -41,22 +49,22 @@ class UserServiceTest extends Test
             $this->svc->deleteEmailLink($this->link);
         }
         if(isset($this->user)) {
-            $this->svc->deleteUser($this->user);
+            $this->svc->deleteUser($this->user, true);
         }
         unset($this->svc);
     }
 
     public function testCreateFromArray()
     {
-        $array = $this->getUserArray();
+        $array = $this->getUserArray('testCreateFromArray');
         $user = $this->svc->createFromArray($array);
         $this->assertInstanceOf('Del\Entity\User', $user);
         $this->assertEquals('a@b.com', $user->getEmail());
-        $this->assertEquals('blah', $user->getPassword());
+        $this->assertEquals('testCreateFromArray', $user->getPassword());
         $this->assertEquals('1970-01-01', $user->getRegistrationDate()->format('Y-m-d'));
         $this->assertEquals('1970-01-01', $user->getLastLoginDate()->format('Y-m-d'));
         $this->assertEquals(State::STATE_UNACTIVATED, $user->getState()->getValue());
-        $this->assertInstanceOf('Del\Entity\Person', $user->getPerson());
+        $this->assertInstanceOf('Del\Person\Entity\Person', $user->getPerson());
     }
 
     public function testToArray()
@@ -77,7 +85,7 @@ class UserServiceTest extends Test
 
     public function testSaveUser()
     {
-        $user = $this->svc->createFromArray($this->getUserArray());
+        $user = $this->svc->createFromArray($this->getUserArray('testSaveUser'));
         $user = $this->svc->saveUser($user);
         $this->assertInstanceOf('Del\Entity\User', $user);
         $this->assertTrue(is_numeric($user->getId()));
@@ -85,53 +93,53 @@ class UserServiceTest extends Test
         $user->setEmail('a@b.com');
         $user = $this->svc->saveUser($user);
         $this->assertEquals('a@b.com', $user->getEmail());
-        $this->svc->deleteUser($user);
+        $this->svc->deleteUser($user, true);
     }
 
 
     public function testFindUserById()
     {
-        $user = $this->svc->createFromArray($this->getUserArray());
+        $user = $this->svc->createFromArray($this->getUserArray('testFindUserById'));
         $user = $this->svc->saveUser($user);
         $id = $user->getID();
         $user = $this->svc->findUserById($id);
         $this->assertInstanceOf('Del\Entity\User', $user);
         $this->assertEquals('a@b.com', $user->getEmail());
-        $this->svc->deleteUser($user);
+        $this->svc->deleteUser($user, true);
     }
 
 
     public function testFindUserByEmail()
     {
-        $user = $this->svc->createFromArray($this->getUserArray());
+        $user = $this->svc->createFromArray($this->getUserArray('testFindUserByEmail'));
         $this->svc->saveUser($user);
         $user = $this->svc->findUserByEmail('a@b.com');
         $this->assertInstanceOf('Del\Entity\User', $user);
-        $this->svc->deleteUser($user);
+        $this->svc->deleteUser($user, true);
     }
 
 
     public function testGenerateEmailLink()
     {
-        $user = $this->svc->createFromArray($this->getUserArray());
+        $user = $this->svc->createFromArray($this->getUserArray('testGenerateEmailLink'));
         $user = $this->svc->saveUser($user);
         $link = $this->svc->generateEmailLink($user);
         $this->assertInstanceOf('Del\Entity\EmailLink', $link);
         $this->svc->deleteEmailLink($link);
-        $this->svc->deleteUser($user);
+        $this->svc->deleteUser($user, true);
     }
 
 
     public function testFindEmailLink()
     {
-        $user = $this->svc->createFromArray($this->getUserArray());
+        $user = $this->svc->createFromArray($this->getUserArray('testFindEmailLink'));
         $user = $this->svc->saveUser($user);
         $link = $this->svc->generateEmailLink($user);
         $token = $link->getToken();
         $link = $this->svc->findEmailLink($user->getEmail(),$token);
         $this->assertInstanceOf('Del\Entity\EmailLink', $link);
         $this->svc->deleteEmailLink($link);
-        $this->svc->deleteUser($user);
+        $this->svc->deleteUser($user, true);
     }
 
 
@@ -156,7 +164,7 @@ class UserServiceTest extends Test
     public function testFindEmailLinkThrowsWhenExpired()
     {
         $this->setExpectedException('Del\Exception\EmailLinkException', EmailLinkException::LINK_EXPIRED);
-        $user = $this->svc->createFromArray($this->getUserArray());
+        $user = $this->svc->createFromArray($this->getUserArray('testFindEmailLinkThrowsWhenExpired'));
         $this->user = $this->svc->saveUser($user);
         $this->link = $this->svc->generateEmailLink($this->user,-8);
         $token = $this->link->getToken();
@@ -175,7 +183,7 @@ class UserServiceTest extends Test
         $this->assertInstanceOf('Del\Entity\User', $user);
         $this->assertEquals('pass@test.com',$user->getEmail());
         $this->assertEquals(State::STATE_UNACTIVATED, $user->getState()->getValue());
-        $this->svc->deleteUser($user);
+        $this->svc->deleteUser($user, true);
     }
 
 
@@ -214,17 +222,17 @@ class UserServiceTest extends Test
 
     public function testChangePassword()
     {
-        $user = $this->svc->createFromArray($this->getUserArray());
+        $user = $this->svc->createFromArray($this->getUserArray('testChangePassword'));
         $user = $this->svc->saveUser($user);
         $user = $this->svc->changePassword($user,'testpass');
         $this->assertTrue($this->svc->checkPassword($user,'testpass'));
-        $this->svc->deleteUser($user);
+        $this->svc->deleteUser($user, true);
     }
 
 
     public function testFindByCriteria()
     {
-        $user = $this->svc->createFromArray($this->getUserArray());
+        $user = $this->svc->createFromArray($this->getUserArray('testFindByCriteria'));
         $this->svc->saveUser($user);
         $criteria = new UserCriteria();
         $criteria->setEmail('a@b.com')
@@ -233,34 +241,34 @@ class UserServiceTest extends Test
         ->setState((string) State::STATE_UNACTIVATED);
         $user = $this->svc->findByCriteria($criteria)[0];
         $this->assertInstanceOf('Del\Entity\User', $user);
-        $this->svc->deleteUser($user);
+        $this->svc->deleteUser($user, true);
     }
 
 
     public function testAuthenticate()
     {
-        $user = $this->svc->createFromArray($this->getUserArray());
+        $user = $this->svc->createFromArray($this->getUserArray('testAuthenticate'));
         $user = $this->svc->changePassword($user,'testpass');
         $user->setState(new State(State::STATE_ACTIVATED));
         $user = $this->svc->saveUser($user);
         $this->assertEquals(State::STATE_ACTIVATED, $user->getState()->getValue());
         $id = $this->svc->authenticate('a@b.com','testpass');
         $this->assertTrue(is_numeric($id));
-        $this->svc->deleteUser($user);
+        $this->svc->deleteUser($user, true);
     }
 
 
     public function testAuthenticateThrowsWhenNotFound()
     {
         $this->setExpectedException('Del\Exception\UserException',UserException::USER_NOT_FOUND);
-        $this->svc->authenticate('pass@test.com','testpass');
+        $this->svc->authenticate('not@found.com','testpass');
     }
 
 
     public function testAuthenticateThrowsWhenUnactivated()
     {
         $this->setExpectedException('Del\Exception\UserException',UserException::USER_UNACTIVATED);
-        $user = $this->svc->createFromArray($this->getUserArray());
+        $user = $this->svc->createFromArray($this->getUserArray('testAuthenticateThrowsWhenUnactivated'));
         $user = $this->svc->changePassword($user,'testpass');
         $this->user = $this->svc->saveUser($user);
         $this->svc->authenticate('a@b.com','testpass');
@@ -270,7 +278,7 @@ class UserServiceTest extends Test
     public function testAuthenticateThrowsWhenDisabled()
     {
         $this->setExpectedException('Del\Exception\UserException',UserException::USER_DISABLED);
-        $user = $this->svc->createFromArray($this->getUserArray());
+        $user = $this->svc->createFromArray($this->getUserArray('testAuthenticateThrowsWhenDisabled'));
         $user = $this->svc->changePassword($user,'testpass');
         $user->setState(new State(State::STATE_DISABLED));
         $this->user = $this->svc->saveUser($user);
@@ -281,7 +289,7 @@ class UserServiceTest extends Test
     public function testAuthenticateThrowsWhenBanned()
     {
         $this->setExpectedException('Del\Exception\UserException',UserException::USER_BANNED);
-        $user = $this->svc->createFromArray($this->getUserArray());
+        $user = $this->svc->createFromArray($this->getUserArray('testAuthenticateThrowsWhenBanned'));
         $user = $this->svc->changePassword($user,'testpass');
         $user->setState(new State(State::STATE_BANNED));
         $this->user = $this->svc->saveUser($user);
@@ -292,7 +300,7 @@ class UserServiceTest extends Test
     public function testAuthenticateThrowsWhenWrongPassword()
     {
         $this->setExpectedException('Del\Exception\UserException',UserException::WRONG_PASSWORD);
-        $user = $this->svc->createFromArray($this->getUserArray());
+        $user = $this->svc->createFromArray($this->getUserArray('testAuthenticateThrowsWhenWrongPassword'));
         $user = $this->svc->changePassword($user,'testpass');
         $user->setState(new State(State::STATE_ACTIVATED));
         $this->user = $this->svc->saveUser($user);
@@ -307,14 +315,17 @@ class UserServiceTest extends Test
     /**
      * @return array
      */
-    private function getUserArray()
+    private function getUserArray($functionName = 'getUserArray')
     {
+        $person = new Person();
+        $person->setFirstname($functionName);
         return [
+            'person' => $person,
             'email' => 'a@b.com',
             'lastLogin' => '1970-01-01',
             'registrationDate' => '1970-01-01',
             'state' => State::STATE_UNACTIVATED,
-            'password' => 'blah'
+            'password' => $functionName
         ];
     }
 

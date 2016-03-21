@@ -3,6 +3,7 @@
 namespace Del\Entity;
 
 use DateTime;
+use Del\Person\Entity\Person;
 use Del\Value\User\State;
 
 class UserTest extends \Codeception\TestCase\Test
@@ -30,7 +31,7 @@ class UserTest extends \Codeception\TestCase\Test
     public function testGetSetId()
     {
         $this->user->setId(100);
-	    $this->assertEquals(100,$this->user->getId());
+        $this->assertEquals(100,$this->user->getId());
     }
 
     public function testGetSetPerson()
@@ -38,7 +39,7 @@ class UserTest extends \Codeception\TestCase\Test
         $person = new Person();
         $person->setAka('Delboy');
         $this->user->setPerson($person);
-        $this->assertInstanceOf('Del\Entity\Person',$this->user->getPerson());
+        $this->assertInstanceOf('Del\Person\Entity\Person',$this->user->getPerson());
         $this->assertEquals('Delboy',$this->user->getPerson()->getAka());
     }
 
