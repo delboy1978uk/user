@@ -9,7 +9,7 @@
     }
   ],
   "require": {
-    "delboy1978uk/person": "^4.*",
+    "delboy1978uk/person": "^4.0.1",
     "zendframework/zend-crypt": "2.5.2"
   },
   "require-dev": {
