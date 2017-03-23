@@ -232,7 +232,7 @@ class UserService
      * @return int
      * @throws UserException
      */
-    function authenticate($email, $password)
+    public function authenticate($email, $password)
     {
         $criteria = new UserCriteria();
         $criteria->setEmail($email);
@@ -247,17 +247,13 @@ class UserService
         $user = $user[0];
 
         switch($user->getState()->getValue()) {
-            case State::STATE_UNACTIVATED :
+            case State::STATE_UNACTIVATED:
                 throw new UserException(UserException::USER_UNACTIVATED);
-                break;
-            case State::STATE_DISABLED :
-            case State::STATE_SUSPENDED :
+            case State::STATE_DISABLED:
+            case State::STATE_SUSPENDED:
                 throw new UserException(UserException::USER_DISABLED);
-                break;
-            case State::STATE_BANNED :
+            case State::STATE_BANNED:
                 throw new UserException(UserException::USER_BANNED);
-                break;
-
         }
 
         $bcrypt = new Bcrypt();
