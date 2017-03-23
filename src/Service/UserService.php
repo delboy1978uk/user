@@ -75,7 +75,6 @@ class UserService
      */
     public function saveUser(User $user)
     {
-//        $this->personSvc->savePerson($user->getPerson());
         return $this->getUserRepository()->save($user);
     }
 
