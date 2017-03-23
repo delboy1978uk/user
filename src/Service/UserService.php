@@ -281,6 +281,16 @@ class UserService
     }
 
     /**
+     * @param UserCriteria $criteria
+     * @return User|null
+     */
+    public function findOneByCriteria(UserCriteria $criteria)
+    {
+        $results = $this->getUserRepository()->findByCriteria($criteria);
+        return count($results) > 0 ? $results[0] : null;
+    }
+
+    /**
      * @param User $user
      * @param $password
      * @return bool

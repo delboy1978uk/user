@@ -245,6 +245,21 @@ class UserServiceTest extends Test
     }
 
 
+    public function testFindOneByCriteria()
+    {
+        $user = $this->svc->createFromArray($this->getUserArray('testFindByCriteria'));
+        $this->svc->saveUser($user);
+        $criteria = new UserCriteria();
+        $criteria->setEmail('a@b.com')
+            ->setRegistrationDate('1970-01-01')
+            ->setLastLoginDate('1970-01-01')
+            ->setState((string) State::STATE_UNACTIVATED);
+        $user = $this->svc->findOneByCriteria($criteria);
+        $this->assertInstanceOf('Del\Entity\User', $user);
+        $this->svc->deleteUser($user, true);
+    }
+
+
     public function testAuthenticate()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testAuthenticate'));
