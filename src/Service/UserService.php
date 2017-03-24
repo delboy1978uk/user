@@ -25,10 +25,14 @@ class UserService
     /** @var  PersonService */
     private $personSvc;
 
+    /** @var string $userClass */
+    private $userClass;
+
     public function __construct(Container $c)
     {
         $this->em = $c['doctrine.entity_manager'];
         $this->personSvc = $c['service.person'];
+        $this->setUserClass('\Del\Entity\User');
     }
 
    /** 
@@ -37,7 +41,8 @@ class UserService
     */
     public function createFromArray(array $data)
     {
-        $user = new User();
+        /** @var User $user */
+        $user = new $this->userClass();
         $person = isset($data['person']) ? $data['person'] : new Person();
         $user->setPerson($person);
         isset($data['id']) ? $user->setId($data['id']) : null;
@@ -107,7 +112,7 @@ class UserService
     */
     private function getUserRepository()
     {
-        return $this->em->getRepository('Del\Entity\User');
+        return $this->em->getRepository($this->userClass);
     }
 
     /**
@@ -135,7 +140,8 @@ class UserService
         }
 
         $person = new Person();
-        $user = new User();
+        /** @var User $user */
+        $user = new $this->userClass();
         $state = new State(State::STATE_UNACTIVATED);
         $user->setPerson($person)
              ->setEmail($data['email'])
@@ -298,4 +304,8 @@ class UserService
         return $bcrypt->verify($password, $user->getPassword());
     }
 
+    public function setUserClass($fullyQualifiedClassName)
+    {
+        $this->userClass = $fullyQualifiedClassName;
+    }
 }
