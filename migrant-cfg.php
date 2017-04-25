@@ -4,7 +4,7 @@ return [
     'db' => [
         'driver' => 'pdo_mysql',
         'dbname' => 'delboy1978uk',
-        'user' => 'root',
+        'user' => 'dbuser',
         'password' => '[123456]',
         'host' => '127.0.0.1',
     ],
