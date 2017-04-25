@@ -36,10 +36,7 @@ class UserServiceTest extends Test
 
     protected function _before()
     {
-        $svc = ContainerService::getInstance();
-        $config = new UserPackage();
-        $svc->registerToContainer($config);
-        $container = $svc->getContainer();
+        $container = ContainerService::getInstance()->getContainer();
         $this->svc = $container['service.user'];
     }
 

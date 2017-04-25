@@ -23,10 +23,6 @@ class UserTest extends CommandTest
 
     protected function _before()
     {
-        $svc = ContainerService::getInstance();
-        $config = new UserPackage();
-        $svc->registerToContainer($config);
-        $svc->getContainer();
         $this->command = new UserCommand();
     }
 
