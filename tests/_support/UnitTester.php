@@ -1,9 +1,7 @@
 <?php
 
 use Codeception\Scenario;
-use Del\Common\Config\DbCredentials;
-use Del\Common\ContainerService;
-use Del\UserPackage;
+
 
 /**
  * Inherited Methods
@@ -27,12 +25,5 @@ class UnitTester extends \Codeception\Actor
    public function __construct(Scenario $scenario)
    {
        parent::__construct($scenario);
-       $creds = require_once 'migrant-cfg.php';
-       $dbCredentials = new DbCredentials($creds['db']);
-       $userPackage = new UserPackage();
-       $containerSvc = ContainerService::getInstance();
-       $containerSvc->setDbCredentials($dbCredentials);
-       $containerSvc->registerToContainer($userPackage);
-       $containerSvc->getContainer();
    }
 }
