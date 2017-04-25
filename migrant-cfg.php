@@ -3,9 +3,9 @@
 return [
     'db' => [
         'driver' => 'pdo_mysql',
-        'dbname' => 'user',
+        'dbname' => 'delboy1978uk',
         'user' => 'root',
-        'password' => '',
+        'password' => '[123456]',
         'host' => '127.0.0.1',
     ],
     'packages' => [
