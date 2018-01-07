@@ -2,10 +2,9 @@
 
 namespace Del\Criteria;
 
-use Del\Common\Criteria as CommonCriteria;
+use Del\Common\Criteria\AbstractCriteria;
 
-
-class UserCriteria extends CommonCriteria
+class UserCriteria extends AbstractCriteria
 {
     const ORDER_ID = 'id';
     const ORDER_EMAIL = 'email';

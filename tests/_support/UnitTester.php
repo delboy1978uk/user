@@ -1,5 +1,7 @@
 <?php
 
+use Codeception\Scenario;
+
 
 /**
  * Inherited Methods
@@ -20,7 +22,8 @@ class UnitTester extends \Codeception\Actor
 {
     use _generated\UnitTesterActions;
 
-   /**
-    * Define custom actions here
-    */
+   public function __construct(Scenario $scenario)
+   {
+       parent::__construct($scenario);
+   }
 }

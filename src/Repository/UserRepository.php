@@ -5,10 +5,14 @@ namespace Del\Repository;
 use Del\Criteria\UserCriteria;
 use Del\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 
 class UserRepository extends EntityRepository
 {
+    /** @var QueryBuilder $qb */
+    private $qb;
+
     /**
      * @param User $user
      * @return User
@@ -36,44 +40,75 @@ class UserRepository extends EntityRepository
 
     /**
      * @param UserCriteria $criteria
+     * @return UserCriteria
+     */
+    private function checkCriteriaForId(UserCriteria $criteria)
+    {
+        if($criteria->hasId()) {
+            $this->qb->where('u.id = :id');
+            $this->qb->setParameter('id', $criteria->getId());
+            $criteria->setLimit(1);
+        }
+        return $criteria;
+    }
+
+    /**
+     * @param UserCriteria $criteria
+     * @return UserCriteria
+     */
+    private function checkCriteriaForEmail(UserCriteria $criteria)
+    {
+        if($criteria->hasEmail()) {
+            $this->qb->where('u.email = :email');
+            $this->qb->setParameter('email', $criteria->getEmail());
+            $criteria->setLimit(1);
+        }
+        return $criteria;
+    }
+
+    private function checkCriteriaForState(UserCriteria $criteria)
+    {
+        if($criteria->hasState()) {
+            $this->qb->andWhere('u.state = :state');
+            $this->qb->setParameter('state', $criteria->getState());
+        }
+    }
+
+    private function checkCriteriaForRegistrationDate(UserCriteria $criteria)
+    {
+        if($criteria->hasRegistrationDate()) {
+            $this->qb->andWhere('u.registrationDate = :regdate');
+            $this->qb->setParameter('regdate', $criteria->getRegistrationDate());
+        }
+    }
+
+    private function checkCriteriaForLastLoginDate(UserCriteria $criteria)
+    {
+        if($criteria->hasLastLoginDate()) {
+            $this->qb->andWhere('u.lastLoginDate = :lastlogin');
+            $this->qb->setParameter('lastlogin', $criteria->getLastLoginDate());
+        }
+    }
+
+    /**
+     * @param UserCriteria $criteria
      * @return array
      */
     public function findByCriteria(UserCriteria $criteria)
     {
-        $qb = $this->createQueryBuilder('u');
+        $this->qb = $this->createQueryBuilder('u');
 
-        if($criteria->hasId()) {
-            $qb->where('u.id = :id');
-            $qb->setParameter('id', $criteria->getId());
-            $criteria->setLimit(1);
-        }
+        $criteria = $this->checkCriteriaForId($criteria);
+        $criteria = $this->checkCriteriaForEmail($criteria);
+        $this->checkCriteriaForState($criteria);
+        $this->checkCriteriaForRegistrationDate($criteria);
+        $this->checkCriteriaForLastLoginDate($criteria);
 
-        if($criteria->hasEmail()) {
-            $qb->where('u.email = :email');
-            $qb->setParameter('email', $criteria->getEmail());
-            $criteria->setLimit(1);
-        }
+        $criteria->hasOrder() ? $this->qb->addOrderBy('u.'.$criteria->getOrder(),$criteria->getOrderDirection()) : null;
+        $criteria->hasLimit() ? $this->qb->setMaxResults($criteria->getLimit()) : null;
+        $criteria->hasOffset() ? $this->qb->setFirstResult($criteria->getOffset()) : null;
 
-        if($criteria->hasState()) {
-            $qb->andWhere('u.state = :state');
-            $qb->setParameter('state', $criteria->getState());
-        }
-
-        if($criteria->hasRegistrationDate()) {
-            $qb->andWhere('u.registrationDate = :regdate');
-            $qb->setParameter('regdate', $criteria->getRegistrationDate());
-        }
-
-        if($criteria->hasLastLoginDate()) {
-            $qb->andWhere('u.lastLoginDate = :lastlogin');
-            $qb->setParameter('lastlogin', $criteria->getLastLoginDate());
-        }
-
-        $criteria->hasOrder() ? $qb->addOrderBy('u.'.$criteria->getOrder(),$criteria->getOrderDirection()) : null;
-        $criteria->hasLimit() ? $qb->setMaxResults($criteria->getLimit()) : null;
-        $criteria->hasOffset() ? $qb->setFirstResult($criteria->getOffset()) : null;
-
-        $query = $qb->getQuery();
+        $query = $this->qb->getQuery();
 
         return $query->getResult();
     }

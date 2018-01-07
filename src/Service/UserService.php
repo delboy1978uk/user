@@ -25,10 +25,14 @@ class UserService
     /** @var  PersonService */
     private $personSvc;
 
+    /** @var string $userClass */
+    private $userClass;
+
     public function __construct(Container $c)
     {
         $this->em = $c['doctrine.entity_manager'];
         $this->personSvc = $c['service.person'];
+        $this->setUserClass('\Del\Entity\User');
     }
 
    /** 
@@ -37,7 +41,8 @@ class UserService
     */
     public function createFromArray(array $data)
     {
-        $user = new User();
+        /** @var User $user */
+        $user = new $this->userClass();
         $person = isset($data['person']) ? $data['person'] : new Person();
         $user->setPerson($person);
         isset($data['id']) ? $user->setId($data['id']) : null;
@@ -75,7 +80,6 @@ class UserService
      */
     public function saveUser(User $user)
     {
-//        $this->personSvc->savePerson($user->getPerson());
         return $this->getUserRepository()->save($user);
     }
 
@@ -108,7 +112,7 @@ class UserService
     */
     private function getUserRepository()
     {
-        return $this->em->getRepository('Del\Entity\User');
+        return $this->em->getRepository($this->userClass);
     }
 
     /**
@@ -136,7 +140,8 @@ class UserService
         }
 
         $person = new Person();
-        $user = new User();
+        /** @var User $user */
+        $user = new $this->userClass();
         $state = new State(State::STATE_UNACTIVATED);
         $user->setPerson($person)
              ->setEmail($data['email'])
@@ -232,7 +237,7 @@ class UserService
      * @return int
      * @throws UserException
      */
-    function authenticate($email, $password)
+    public function authenticate($email, $password)
     {
         $criteria = new UserCriteria();
         $criteria->setEmail($email);
@@ -247,17 +252,13 @@ class UserService
         $user = $user[0];
 
         switch($user->getState()->getValue()) {
-            case State::STATE_UNACTIVATED :
+            case State::STATE_UNACTIVATED:
                 throw new UserException(UserException::USER_UNACTIVATED);
-                break;
-            case State::STATE_DISABLED :
-            case State::STATE_SUSPENDED :
+            case State::STATE_DISABLED:
+            case State::STATE_SUSPENDED:
                 throw new UserException(UserException::USER_DISABLED);
-                break;
-            case State::STATE_BANNED :
+            case State::STATE_BANNED:
                 throw new UserException(UserException::USER_BANNED);
-                break;
-
         }
 
         $bcrypt = new Bcrypt();
@@ -281,6 +282,16 @@ class UserService
     }
 
     /**
+     * @param UserCriteria $criteria
+     * @return User|null
+     */
+    public function findOneByCriteria(UserCriteria $criteria)
+    {
+        $results = $this->getUserRepository()->findByCriteria($criteria);
+        return count($results) > 0 ? $results[0] : null;
+    }
+
+    /**
      * @param User $user
      * @param $password
      * @return bool
@@ -293,4 +304,8 @@ class UserService
         return $bcrypt->verify($password, $user->getPassword());
     }
 
+    public function setUserClass($fullyQualifiedClassName)
+    {
+        $this->userClass = $fullyQualifiedClassName;
+    }
 }

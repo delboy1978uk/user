@@ -36,10 +36,7 @@ class UserServiceTest extends Test
 
     protected function _before()
     {
-        $svc = ContainerService::getInstance();
-        $config = new UserPackage();
-        $svc->registerToContainer($config);
-        $container = $svc->getContainer();
+        $container = ContainerService::getInstance()->getContainer();
         $this->svc = $container['service.user'];
     }
 
@@ -240,6 +237,21 @@ class UserServiceTest extends Test
         ->setLastLoginDate('1970-01-01')
         ->setState((string) State::STATE_UNACTIVATED);
         $user = $this->svc->findByCriteria($criteria)[0];
+        $this->assertInstanceOf('Del\Entity\User', $user);
+        $this->svc->deleteUser($user, true);
+    }
+
+
+    public function testFindOneByCriteria()
+    {
+        $user = $this->svc->createFromArray($this->getUserArray('testFindByCriteria'));
+        $this->svc->saveUser($user);
+        $criteria = new UserCriteria();
+        $criteria->setEmail('a@b.com')
+            ->setRegistrationDate('1970-01-01')
+            ->setLastLoginDate('1970-01-01')
+            ->setState((string) State::STATE_UNACTIVATED);
+        $user = $this->svc->findOneByCriteria($criteria);
         $this->assertInstanceOf('Del\Entity\User', $user);
         $this->svc->deleteUser($user, true);
     }
