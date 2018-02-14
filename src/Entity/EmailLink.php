@@ -49,7 +49,7 @@ class EmailLink
     }
 
     /**
-     * @return User
+     * @return UserInterface
      */
     public function getUser()
     {
@@ -57,7 +57,7 @@ class EmailLink
     }
 
     /**
-     * @param User $user
+     * @param UserInterface $user
      * @return EmailLink
      */
     public function setUser($user)
@@ -85,7 +85,7 @@ class EmailLink
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getToken()
     {
@@ -93,7 +93,7 @@ class EmailLink
     }
 
     /**
-     * @param mixed $token
+     * @param string $token
      * @return EmailLink
      */
     public function setToken($token)
@@ -101,8 +101,6 @@ class EmailLink
         $this->token = $token;
         return $this;
     }
-
-
 }
 
 

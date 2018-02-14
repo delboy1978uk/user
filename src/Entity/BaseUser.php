@@ -9,7 +9,7 @@ use Del\Person\Entity\Person;
 /**
  * @MappedSuperclass()
  */
-class BaseUser
+class BaseUser implements UserInterface
 {
     /**
      * @Id
@@ -49,20 +49,24 @@ class BaseUser
      */
     private $lastLoginDate;
 
-
+    /**
+     * BaseUser constructor.
+     */
     public function __construct()
     {
         $this->state = 0;
     }
 
-
-    public function getID()
+    /**
+     * @return int
+     */
+    public function getId()
     {
         return $this->id;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getEmail()
     {
@@ -77,7 +81,9 @@ class BaseUser
         return $this->person;
     }
 
-
+    /**
+     * @return string
+     */
     public function getPassword()
     {
         return $this->password;
@@ -107,14 +113,19 @@ class BaseUser
         return $this->lastLoginDate;
     }
 
-    public function setID($id)
+    /**
+     * @param $id
+     * @return $this
+     */
+    public function setId($id)
     {
         $this->id = $id;
         return $this;
     }
+
     /**
      * @param mixed $email
-     * @return User
+     * @return $this
      */
     public function setEmail($email)
     {
@@ -122,12 +133,20 @@ class BaseUser
         return $this;
     }
 
+    /**
+     * @param Person $person
+     * @return $this|UserInterface
+     */
     public function setPerson(Person $person)
     {
         $this->person = $person;
         return $this;
     }
 
+    /**
+     * @param string $password
+     * @return $this|UserInterface
+     */
     public function setPassword($password)
     {
         $this->password = $password;
@@ -136,7 +155,7 @@ class BaseUser
 
     /**
      * @param State $state
-     * @return User
+     * @return $this
      */
     public function setState(State $state)
     {
@@ -146,7 +165,7 @@ class BaseUser
 
     /**
      * @param DateTime $registrationDate
-     * @return User
+     * @return $this
      */
     public function setRegistrationDate($registrationDate)
     {
@@ -156,12 +175,11 @@ class BaseUser
 
     /**
      * @param DateTime $lastLogin
-     * @return User
+     * @return $this
      */
     public function setLastLogin(DateTime $lastLogin)
     {
         $this->lastLoginDate = $lastLogin;
         return $this;
     }
-
 }

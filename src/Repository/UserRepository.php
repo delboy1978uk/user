@@ -3,7 +3,7 @@
 namespace Del\Repository;
 
 use Del\Criteria\UserCriteria;
-use Del\Entity\User;
+use Del\Entity\UserInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
@@ -14,10 +14,10 @@ class UserRepository extends EntityRepository
     private $qb;
 
     /**
-     * @param User $user
-     * @return User
+     * @param UserInterface $user
+     * @return UserInterface
      */
-    public function save(User $user)
+    public function save(UserInterface $user)
     {
         if(!$user->getID()) {
             $this->_em->persist($user);
@@ -27,9 +27,9 @@ class UserRepository extends EntityRepository
         return $user;
     }
     /**
-     * @param User $user
+     * @param UserInterface $user
      */
-    public function delete(User $user, $deletePerson = false)
+    public function delete(UserInterface $user, $deletePerson = false)
     {
         if($deletePerson) {
             $this->_em->remove($user->getPerson());

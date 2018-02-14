@@ -6,7 +6,7 @@ use DateTime;
 use Del\Criteria\UserCriteria;
 use Del\Entity\EmailLink;
 use Del\Person\Entity\Person;
-use Del\Entity\User;
+use Del\Entity\UserInterface;
 use Del\Exception\EmailLinkException;
 use Del\Exception\UserException;
 use Del\Repository\UserRepository;
@@ -37,11 +37,11 @@ class UserService
 
    /** 
     * @param array $data
-    * @return User
+    * @return UserInterface
     */
     public function createFromArray(array $data)
     {
-        /** @var User $user */
+        /** @var UserInterface $user */
         $user = new $this->userClass();
         $person = isset($data['person']) ? $data['person'] : new Person();
         $user->setPerson($person);
@@ -60,7 +60,7 @@ class UserService
     /**
      * @return array
      */
-    public function toArray(User $user)
+    public function toArray(UserInterface $user)
     {
         return array
         (
@@ -75,17 +75,17 @@ class UserService
     }
 
     /**
-     * @param User $user
-     * @return User
+     * @param UserInterface $user
+     * @return UserInterface
      */
-    public function saveUser(User $user)
+    public function saveUser(UserInterface $user)
     {
         return $this->getUserRepository()->save($user);
     }
 
     /**
      * @param int $id
-     * @return User|null
+     * @return UserInterface|null
      */
     public function findUserById($id)
     {
@@ -97,7 +97,7 @@ class UserService
 
     /**
      * @param string $email
-     * @return User|null
+     * @return UserInterface|null
      */
     public function findUserByEmail($email)
     {
@@ -123,6 +123,11 @@ class UserService
         return $this->em->getRepository('Del\Entity\EmailLink');
     }
 
+    /**
+     * @param array $data
+     * @return UserInterface
+     * @throws UserException
+     */
     public function registerUser(array $data)
     {
         if (!isset($data['email']) || !isset($data['password']) || !isset($data['confirm'])) {
@@ -140,7 +145,7 @@ class UserService
         }
 
         $person = new Person();
-        /** @var User $user */
+        /** @var UserInterface $user */
         $user = new $this->userClass();
         $state = new State(State::STATE_UNACTIVATED);
         $user->setPerson($person)
@@ -159,11 +164,11 @@ class UserService
     }
 
     /**
-     * @param User $user
+     * @param UserInterface $user
      * @param $password
-     * @return User
+     * @return UserInterface
      */
-    public function changePassword(User $user, $password)
+    public function changePassword(UserInterface $user, $password)
     {
         $bcrypt = new Bcrypt();
         $bcrypt->setCost(14);
@@ -176,11 +181,11 @@ class UserService
     }
 
     /**
-     * @param User $user
+     * @param UserInterface $user
      * @param int $expiry_days
      * @return EmailLink
      */
-    public function generateEmailLink(User $user, $expiry_days = 7)
+    public function generateEmailLink(UserInterface $user, $expiry_days = 7)
     {
         $date = new DateTime();
         $date->modify('+'.$expiry_days.' days');
@@ -203,16 +208,16 @@ class UserService
     }
 
     /**
-     * @param User $user
+     * @param UserInterface $user
      */
-    public function deleteUser(User $user, $deletePerson = false)
+    public function deleteUser(UserInterface $user, $deletePerson = false)
     {
         $this->getUserRepository()->delete($user,$deletePerson);
     }
 
     /**
-     * @param $email
-     * @param $token
+     * @param string $email
+     * @param string $token
      * @return EmailLink
      * @throws EmailLinkException
      */
@@ -248,7 +253,7 @@ class UserService
             throw new UserException(UserException::USER_NOT_FOUND);
         }
 
-        /** @var User $user  */
+        /** @var UserInterface $user  */
         $user = $user[0];
 
         switch($user->getState()->getValue()) {
@@ -283,7 +288,7 @@ class UserService
 
     /**
      * @param UserCriteria $criteria
-     * @return User|null
+     * @return UserInterface|null
      */
     public function findOneByCriteria(UserCriteria $criteria)
     {
@@ -292,11 +297,11 @@ class UserService
     }
 
     /**
-     * @param User $user
+     * @param UserInterface $user
      * @param $password
      * @return bool
      */
-    public function checkPassword(User $user, $password)
+    public function checkPassword(UserInterface $user, $password)
     {
         $bcrypt = new Bcrypt();
         $bcrypt->setCost(14);
@@ -304,6 +309,9 @@ class UserService
         return $bcrypt->verify($password, $user->getPassword());
     }
 
+    /**
+     * @param string $fullyQualifiedClassName
+     */
     public function setUserClass($fullyQualifiedClassName)
     {
         $this->userClass = $fullyQualifiedClassName;
