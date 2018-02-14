@@ -8,8 +8,6 @@ use Del\Person\Entity\Person;
 
 /**
  * @MappedSuperclass()
- * @Entity(repositoryClass="Del\Repository\UserRepository")
- * @Table(name="User",uniqueConstraints={@UniqueConstraint(name="email_idx", columns={"email"})})
  */
 class BaseUser
 {
