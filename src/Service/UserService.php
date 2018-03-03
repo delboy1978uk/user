@@ -131,7 +131,7 @@ class UserService
     public function registerUser(array $data)
     {
         if (!isset($data['email']) || !isset($data['password']) || !isset($data['confirm'])) {
-            throw new InvalidArgumentException();
+            throw new InvalidArgumentException('Required fields missing', 400);
         }
         if ($data['password'] !== $data['confirm']) {
             throw new UserException(UserException::WRONG_PASSWORD);
