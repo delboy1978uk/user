@@ -5,8 +5,8 @@ return [
         'driver' => 'pdo_mysql',
         'dbname' => 'delboy1978uk',
         'user' => 'dbuser',
-        'password' => '[123456]',
-        'host' => '127.0.0.1',
+        'password' => '12345',
+        'host' => 'mariadb',
     ],
     'packages' => [
         'delboy1978uk/person',

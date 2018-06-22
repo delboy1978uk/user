@@ -9,6 +9,7 @@
     }
   ],
   "require": {
+    "php": "^7.1",
     "delboy1978uk/person": "^5.0",
     "zendframework/zend-crypt": "^2.5.2"
   },
