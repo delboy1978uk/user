@@ -18,7 +18,7 @@ addons:
 sudo: false
 
 install:
-  - composer why-not delboy1978uk/person
+  - composer why delboy1978uk/person
   - composer install
 
 before_script:
