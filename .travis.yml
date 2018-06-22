@@ -18,6 +18,7 @@ addons:
 sudo: false
 
 install:
+  - composer why
   - composer install
 
 before_script:
