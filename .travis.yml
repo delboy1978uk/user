@@ -18,7 +18,6 @@ addons:
 sudo: false
 
 install:
-  - composer prohibits delboy1978uk/person
   - composer install
 
 before_script:
