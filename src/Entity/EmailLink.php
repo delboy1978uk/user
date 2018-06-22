@@ -11,7 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 class EmailLink
 {
     /**
-     * @ORM\Id @Column(type="integer")
+     * @ORM\Id 
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      */
     private $id;
