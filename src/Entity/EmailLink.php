@@ -3,30 +3,31 @@
 namespace Del\Entity;
 
 use DateTime;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @Entity(repositoryClass="Del\Repository\EmailLink")
+ * @ORM\Entity(repositoryClass="Del\Repository\EmailLink")
  */
 class EmailLink
 {
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @Column(type="integer")
+     * @ORM\GeneratedValue
      */
     private $id;
 
     /**
-     *  @ManyToOne(targetEntity="Del\Entity\BaseUser",cascade={"persist"})
+     *  @ORM\ManyToOne(targetEntity="Del\Entity\BaseUser",cascade={"persist"})
      */
     private $user;
 
     /**
-     * @Column(type="datetime")
+     * @ORM\Column(type="datetime")
      */
     private $expiry_date;
 
     /**
-     * @Column(type="string")
+     * @ORM\Column(type="string")
      */
     private $token;
 

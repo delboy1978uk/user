@@ -5,46 +5,47 @@ namespace Del\Entity;
 use DateTime;
 use Del\Value\User\State;
 use Del\Person\Entity\Person;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @MappedSuperclass()
+ * @ORM\MappedSuperclass()
  */
 class BaseUser implements UserInterface
 {
     /**
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
      */
     private $id;
 
     /**
-     * @Column(type="string",length=50)
+     * @ORM\Column(type="string",length=50)
      */
     private $email;
 
     /**
-     * @OneToOne(targetEntity="Del\Person\Entity\Person",cascade="persist")
+     * @ORM\OneToOne(targetEntity="Del\Person\Entity\Person",cascade="persist")
      */
     private $person;
 
-    /** @Column(type="string",length=100) */
+    /** @ORM\Column(type="string",length=100) */
     private $password;
 
     /**
-     * @Column(type="integer",length=1)
+     * @ORM\Column(type="integer",length=1)
      * @var int
      */
     private $state;
 
     /**
-     * @Column(type="date",nullable=true)
+     * @ORM\Column(type="date",nullable=true)
      * @var DateTime
      */
     private $registrationDate;
 
     /**
-     * @Column(type="date",nullable=true)
+     * @ORM\Column(type="date",nullable=true)
      * @var DateTime
      */
     private $lastLoginDate;
