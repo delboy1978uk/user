@@ -3,7 +3,7 @@
 return [
     'db' => [
         'driver' => 'pdo_mysql',
-        'dbname' => 'travis',
+        'dbname' => 'delboy1978uk',
         'user' => 'travis',
         'password' => 'travis',
         'host' => '127.0.0.1',
