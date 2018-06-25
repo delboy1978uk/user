@@ -10,5 +10,4 @@ vendor/
 #test output
 tests/_output
 
-migrant-cfg.php
 *.local.php

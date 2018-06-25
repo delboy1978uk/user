@@ -10,6 +10,7 @@ class EmailLink extends EntityRepository
     /**
      * @param EmailLinkEntity $link
      * @return EmailLinkEntity
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(EmailLinkEntity $link)
     {
@@ -17,8 +18,10 @@ class EmailLink extends EntityRepository
         $this->_em->flush();
         return $link;
     }
+
     /**
      * @param EmailLinkEntity $link
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function delete(EmailLinkEntity $link)
     {
