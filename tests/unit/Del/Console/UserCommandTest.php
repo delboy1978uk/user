@@ -13,7 +13,7 @@ use Del\Service\UserService;
 use Del\UserPackage;
 use Del\Value\User\State;
 
-class UserTest extends CommandTest
+class UserCommandTest extends CommandTest
 {
 
     /**

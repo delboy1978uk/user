@@ -16,6 +16,7 @@ class UserRepository extends EntityRepository
     /**
      * @param UserInterface $user
      * @return UserInterface
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(UserInterface $user)
     {
@@ -26,8 +27,11 @@ class UserRepository extends EntityRepository
         $this->_em->flush($user->getPerson());
         return $user;
     }
+
     /**
      * @param UserInterface $user
+     * @param bool $deletePerson
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function delete(UserInterface $user, $deletePerson = false)
     {

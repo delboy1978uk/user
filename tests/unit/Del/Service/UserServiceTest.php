@@ -126,7 +126,9 @@ class UserServiceTest extends Test
         $this->svc->deleteUser($user, true);
     }
 
-
+    /**
+     * @throws EmailLinkException
+     */
     public function testFindEmailLink()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testFindEmailLink'));
@@ -139,7 +141,9 @@ class UserServiceTest extends Test
         $this->svc->deleteUser($user, true);
     }
 
-
+    /**
+     * @throws EmailLinkException
+     */
     public function testFindEmailLinkThrowsWhenNotFound()
     {
         $this->setExpectedException('Del\Exception\EmailLinkException', EmailLinkException::LINK_NOT_FOUND);
@@ -147,6 +151,9 @@ class UserServiceTest extends Test
     }
 
 
+    /**
+     * @throws EmailLinkException
+     */
     public function testFindEmailLinkThrowsWhenWrongUser()
     {
         $this->setExpectedException('Del\Exception\EmailLinkException', EmailLinkException::LINK_NO_MATCH);
@@ -158,6 +165,9 @@ class UserServiceTest extends Test
     }
 
 
+    /**
+     * @throws EmailLinkException
+     */
     public function testFindEmailLinkThrowsWhenExpired()
     {
         $this->setExpectedException('Del\Exception\EmailLinkException', EmailLinkException::LINK_EXPIRED);
@@ -169,6 +179,9 @@ class UserServiceTest extends Test
     }
 
 
+    /**
+     * @throws UserException
+     */
     public function testRegisterUser()
     {
         $form = [
@@ -184,6 +197,9 @@ class UserServiceTest extends Test
     }
 
 
+    /**
+     * @throws UserException
+     */
     public function testRegisterUserThrowsInvalidArgumentException()
     {
         $this->setExpectedException('InvalidArgumentException');
@@ -192,9 +208,12 @@ class UserServiceTest extends Test
     }
 
 
+    /**
+     * @throws UserException
+     */
     public function testRegisterUserThrowsOnWrongConfirm()
     {
-        $this->setExpectedException('Del\Exception\UserException', UserException::WRONG_PASSWORD);
+        $this->setExpectedException(UserException::class, UserException::WRONG_PASSWORD);
         $form = [
             'email' => 'pass@test.com',
             'password' => '123456',
@@ -204,9 +223,12 @@ class UserServiceTest extends Test
     }
 
 
+    /**
+     * @throws UserException
+     */
     public function testRegisterUserThrowsOnExisting()
     {
-        $this->setExpectedException('Del\Exception\UserException', UserException::USER_EXISTS);
+        $this->setExpectedException(UserException::class, UserException::USER_EXISTS);
         $form = [
             'email' => 'pass@test.com',
             'password' => '123456',
@@ -257,6 +279,9 @@ class UserServiceTest extends Test
     }
 
 
+    /**
+     * @throws UserException
+     */
     public function testAuthenticate()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testAuthenticate'));
@@ -270,16 +295,22 @@ class UserServiceTest extends Test
     }
 
 
+    /**
+     * @throws UserException
+     */
     public function testAuthenticateThrowsWhenNotFound()
     {
-        $this->setExpectedException('Del\Exception\UserException',UserException::USER_NOT_FOUND);
+        $this->setExpectedException(UserException::class,UserException::USER_NOT_FOUND);
         $this->svc->authenticate('not@found.com','testpass');
     }
 
 
+    /**
+     * @throws UserException
+     */
     public function testAuthenticateThrowsWhenUnactivated()
     {
-        $this->setExpectedException('Del\Exception\UserException',UserException::USER_UNACTIVATED);
+        $this->setExpectedException(UserException::class,UserException::USER_UNACTIVATED);
         $user = $this->svc->createFromArray($this->getUserArray('testAuthenticateThrowsWhenUnactivated'));
         $user = $this->svc->changePassword($user,'testpass');
         $this->user = $this->svc->saveUser($user);
@@ -287,9 +318,12 @@ class UserServiceTest extends Test
     }
 
 
+    /**
+     * @throws UserException
+     */
     public function testAuthenticateThrowsWhenDisabled()
     {
-        $this->setExpectedException('Del\Exception\UserException',UserException::USER_DISABLED);
+        $this->setExpectedException(UserException::class,UserException::USER_DISABLED);
         $user = $this->svc->createFromArray($this->getUserArray('testAuthenticateThrowsWhenDisabled'));
         $user = $this->svc->changePassword($user,'testpass');
         $user->setState(new State(State::STATE_DISABLED));
@@ -298,9 +332,12 @@ class UserServiceTest extends Test
     }
 
 
+    /**
+     * @throws UserException
+     */
     public function testAuthenticateThrowsWhenBanned()
     {
-        $this->setExpectedException('Del\Exception\UserException',UserException::USER_BANNED);
+        $this->setExpectedException(UserException::class,UserException::USER_BANNED);
         $user = $this->svc->createFromArray($this->getUserArray('testAuthenticateThrowsWhenBanned'));
         $user = $this->svc->changePassword($user,'testpass');
         $user->setState(new State(State::STATE_BANNED));
@@ -309,9 +346,12 @@ class UserServiceTest extends Test
     }
 
 
+    /**
+     * @throws UserException
+     */
     public function testAuthenticateThrowsWhenWrongPassword()
     {
-        $this->setExpectedException('Del\Exception\UserException',UserException::WRONG_PASSWORD);
+        $this->setExpectedException(UserException::class,UserException::WRONG_PASSWORD);
         $user = $this->svc->createFromArray($this->getUserArray('testAuthenticateThrowsWhenWrongPassword'));
         $user = $this->svc->changePassword($user,'testpass');
         $user->setState(new State(State::STATE_ACTIVATED));
