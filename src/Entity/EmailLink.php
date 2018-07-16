@@ -18,7 +18,7 @@ class EmailLink
     private $id;
 
     /**
-     *  @ORM\ManyToOne(targetEntity="Del\Entity\BaseUser",cascade={"persist"})
+     *  @ORM\ManyToOne(targetEntity="Del\Entity\User",cascade={"persist"})
      */
     private $user;
 
