@@ -10,7 +10,7 @@
   ],
   "require": {
     "php": "^7.1",
-    "delboy1978uk/person": "^5.0",
+    "delboy1978uk/person": "dev-master",
     "zendframework/zend-crypt": "^2.5.2"
   },
   "require-dev": {
