@@ -14,7 +14,7 @@ class UserPackage implements RegistrationInterface
     /**
      * @param Container $c
      */
-    public function addToContainer(Container $c): void 
+    public function addToContainer(Container $c): void
     {
         $personPackage = new PersonPackage();
         $personPackage->addToContainer($c);

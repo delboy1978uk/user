@@ -109,7 +109,7 @@ class BaseUser implements UserInterface
     /**
      * @return DateTime
      */
-    public function getLastLoginDate(): DateTime
+    public function getLastLoginDate(): ?DateTime
     {
         return $this->lastLoginDate;
     }

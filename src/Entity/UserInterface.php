@@ -11,7 +11,7 @@ interface UserInterface
     /**
      * @return int
      */
-    public function getId(): int;
+    public function getId(): ?int;
 
     /**
      * @return string
@@ -39,9 +39,9 @@ interface UserInterface
     public function getRegistrationDate(): DateTime;
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getLastLoginDate(): DateTime;
+    public function getLastLoginDate(): ?DateTime;
 
     /**
      * @param $id
