@@ -59,9 +59,9 @@ class BaseUser implements UserInterface
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -69,7 +69,7 @@ class BaseUser implements UserInterface
     /**
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -77,7 +77,7 @@ class BaseUser implements UserInterface
     /**
      * @return Person
      */
-    public function getPerson()
+    public function getPerson(): Person
     {
         return $this->person;
     }
@@ -85,7 +85,7 @@ class BaseUser implements UserInterface
     /**
      * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -93,7 +93,7 @@ class BaseUser implements UserInterface
     /**
      * @return State
      */
-    public function getState()
+    public function getState(): State
     {
         return new State($this->state);
     }
@@ -101,7 +101,7 @@ class BaseUser implements UserInterface
     /**
      * @return DateTime
      */
-    public function getRegistrationDate()
+    public function getRegistrationDate(): DateTime
     {
         return $this->registrationDate;
     }
@@ -109,78 +109,64 @@ class BaseUser implements UserInterface
     /**
      * @return DateTime
      */
-    public function getLastLoginDate()
+    public function getLastLoginDate(): DateTime
     {
         return $this->lastLoginDate;
     }
 
     /**
      * @param $id
-     * @return $this
      */
-    public function setId($id)
+    public function setId(int $id): void
     {
         $this->id = $id;
-        return $this;
     }
 
     /**
      * @param mixed $email
-     * @return $this
      */
-    public function setEmail($email)
+    public function setEmail(string $email): void
     {
         $this->email = $email;
-        return $this;
     }
 
     /**
      * @param Person $person
-     * @return $this|UserInterface
      */
-    public function setPerson(Person $person)
+    public function setPerson(Person $person): void
     {
         $this->person = $person;
-        return $this;
     }
 
     /**
      * @param string $password
-     * @return $this|UserInterface
      */
-    public function setPassword($password)
+    public function setPassword(string $password): void
     {
         $this->password = $password;
-        return $this;
     }
 
     /**
      * @param State $state
-     * @return $this
      */
-    public function setState(State $state)
+    public function setState(State $state): void
     {
         $this->state = $state->getValue();
-        return $this;
     }
 
     /**
      * @param DateTime $registrationDate
-     * @return $this
      */
-    public function setRegistrationDate($registrationDate)
+    public function setRegistrationDate(DateTime $registrationDate): void
     {
         $this->registrationDate = $registrationDate;
-        return $this;
     }
 
     /**
      * @param DateTime $lastLogin
-     * @return $this
      */
-    public function setLastLogin(DateTime $lastLogin)
+    public function setLastLogin(DateTime $lastLogin): void
     {
         $this->lastLoginDate = $lastLogin;
-        return $this;
     }
 }

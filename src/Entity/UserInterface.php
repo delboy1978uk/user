@@ -11,77 +11,70 @@ interface UserInterface
     /**
      * @return int
      */
-    public function getId();
+    public function getId(): int;
 
     /**
      * @return string
      */
-    public function getEmail();
+    public function getEmail(): string;
 
     /**
      * @return Person
      */
-    public function getPerson();
+    public function getPerson(): Person;
 
     /**
      * @return string
      */
-    public function getPassword();
+    public function getPassword(): string ;
 
     /**
      * @return State
      */
-    public function getState();
+    public function getState(): State;
 
     /**
      * @return DateTime
      */
-    public function getRegistrationDate();
+    public function getRegistrationDate(): DateTime;
 
     /**
      * @return DateTime
      */
-    public function getLastLoginDate();
+    public function getLastLoginDate(): DateTime;
 
     /**
      * @param $id
-     * @return mixed
      */
-    public function setID($id);
+    public function setId(int $id): void;
     
     /**
      * @param string $email
-     * @return UserInterface
      */
-    public function setEmail($email);
+    public function setEmail(string $email): void;
 
     /**
      * @param Person $person
-     * @return UserInterface
      */
-    public function setPerson(Person $person);
+    public function setPerson(Person $person): void;
 
     /**
      * @param string $password
-     * @return UserInterface
      */
-    public function setPassword($password);
+    public function setPassword(string $password): void;
 
     /**
      * @param State $state
-     * @return UserInterface
      */
-    public function setState(State $state);
+    public function setState(State $state): void ;
 
     /**
      * @param DateTime $registrationDate
-     * @return UserInterface
      */
-    public function setRegistrationDate($registrationDate);
+    public function setRegistrationDate(DateTime $registrationDate): void;
 
     /**
      * @param DateTime $lastLogin
-     * @return UserInterface
      */
-    public function setLastLogin(DateTime $lastLogin);
+    public function setLastLogin(DateTime $lastLogin): void ;
 }

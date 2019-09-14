@@ -35,7 +35,7 @@ class EmailLink
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -44,16 +44,15 @@ class EmailLink
      * @param int $id
      * @return EmailLink
      */
-    public function setId($id)
+    public function setId(int $id): void
     {
         $this->id = $id;
-        return $this;
     }
 
     /**
      * @return UserInterface
      */
-    public function getUser()
+    public function getUser(): UserInterface
     {
         return $this->user;
     }
@@ -62,16 +61,15 @@ class EmailLink
      * @param UserInterface $user
      * @return EmailLink
      */
-    public function setUser($user)
+    public function setUser(UserInterface $user): void
     {
         $this->user = $user;
-        return $this;
     }
 
     /**
      * @return DateTime
      */
-    public function getExpiryDate()
+    public function getExpiryDate(): DateTime
     {
         return $this->expiry_date;
     }
@@ -80,16 +78,15 @@ class EmailLink
      * @param DateTime $expiry_date
      * @return EmailLink
      */
-    public function setExpiryDate(DateTime $expiry_date)
+    public function setExpiryDate(DateTime $expiry_date): void
     {
         $this->expiry_date = $expiry_date;
-        return $this;
     }
 
     /**
      * @return string
      */
-    public function getToken()
+    public function getToken(): string
     {
         return $this->token;
     }
@@ -98,10 +95,9 @@ class EmailLink
      * @param string $token
      * @return EmailLink
      */
-    public function setToken($token)
+    public function setToken(string $token):  void
     {
         $this->token = $token;
-        return $this;
     }
 }
 

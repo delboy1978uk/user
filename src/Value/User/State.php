@@ -17,7 +17,7 @@ class State
     /**
      * @param $val
      */
-    public function __construct($val)
+    public function __construct(int $val)
     {
         if(!in_array($val, [self::STATE_UNACTIVATED, self::STATE_ACTIVATED, self::STATE_DISABLED, self::STATE_SUSPENDED, self::STATE_BANNED])) {
             throw new InvalidArgumentException('Value is invalid');
@@ -26,9 +26,9 @@ class State
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->value;
     }

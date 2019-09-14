@@ -17,6 +17,10 @@ class UserCommand extends Command
     /** @var UserService $userService */
     private $userService;
 
+    /**
+     * UserCommand constructor.
+     * @throws \Doctrine\ORM\ORMException
+     */
     public function __construct()
     {
         parent::__construct();
@@ -24,6 +28,9 @@ class UserCommand extends Command
         $this->userService = $container['service.user'];
     }
 
+    /**
+     *
+     */
     protected function configure()
     {
         $this
@@ -41,6 +48,12 @@ class UserCommand extends Command
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|void|null
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $email = $input->getArgument('email');

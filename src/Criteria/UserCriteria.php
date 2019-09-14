@@ -3,6 +3,7 @@
 namespace Del\Criteria;
 
 use Del\Common\Criteria\AbstractCriteria;
+use Nette\Utils\DateTime;
 
 class UserCriteria extends AbstractCriteria
 {
@@ -21,25 +22,23 @@ class UserCriteria extends AbstractCriteria
     /**
      * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
      * @param $id
-     * @return $this
      */
-    public function setId($id)
+    public function setId(int $id): void
     {
-        $this->id = (int) $id;
-        return $this;
+        $this->id = $id;
     }
 
     /**
      * @return bool
      */
-    public function hasId()
+    public function hasId(): bool
     {
         return $this->id != null;
     }
@@ -47,106 +46,96 @@ class UserCriteria extends AbstractCriteria
     /**
      * @return mixed
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
     /**
-     * @param mixed $email
-     * @return UserCriteria
+     * @param string $email
      */
-    public function setEmail($email)
+    public function setEmail($email): void
     {
         $this->email = $email;
-        return $this;
     }
 
     /**
      * @return bool
      */
-    public function hasEmail()
+    public function hasEmail(): bool
     {
         return $this->email != null;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getState()
+    public function getState(): int
     {
         return $this->state;
     }
 
     /**
      * @param mixed $state
-     * @return UserCriteria
      */
-    public function setState($state)
+    public function setState(int $state): void
     {
         $this->state = $state;
-        return $this;
     }
 
     /**
      * @return bool
      */
-    public function hasState()
+    public function hasState(): bool
     {
         return $this->state != null;
     }
 
     /**
-     * @return mixed
+     * @return DateTime
      */
-    public function getRegistrationDate()
+    public function getRegistrationDate(): DateTime
     {
         return $this->registrationDate;
     }
 
     /**
-     * @param mixed $registrationDate
-     * @return UserCriteria
+     * @param DateTime $registrationDate
      */
-    public function setRegistrationDate($registrationDate)
+    public function setRegistrationDate(DateTime $registrationDate): void
     {
         $this->registrationDate = $registrationDate;
-        return $this;
     }
 
     /**
      * @return bool
      */
-    public function hasRegistrationDate()
+    public function hasRegistrationDate(): bool
     {
         return $this->registrationDate != null;
     }
 
     /**
-     * @return mixed
+     * @return DateTime
      */
-    public function getLastLoginDate()
+    public function getLastLoginDate(): DateTime
     {
         return $this->lastLoginDate;
     }
 
     /**
      * @param mixed $lastLoginDate
-     * @return UserCriteria
      */
-    public function setLastLoginDate($lastLoginDate)
+    public function setLastLoginDate(DateTime $lastLoginDate): void
     {
         $this->lastLoginDate = $lastLoginDate;
-        return $this;
     }
 
     /**
      * @return bool
      */
-    public function hasLastLoginDate()
+    public function hasLastLoginDate(): bool
     {
         return $this->lastLoginDate != null;
     }
-
-
 }
