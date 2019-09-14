@@ -60,10 +60,12 @@ Once you have registered the DB credentials and user package, you can call the u
 container) anywhere in your project in the following way:
 ```php
 <?php 
+use Del\Common\ContainerService;
+use Del\Service\UserService;
 
 $container = ContainerService::getInstance()->getContainer();
-/** @var \Del\Service\User $userService */
-$userService = $container['service.user'];
+/** @var \Del\Service\UserService $userService */
+$userService = $container[UserService::class];
 ```
 ## The User Service
 All manipulation of our User objects happens through the UserService, which has a variety of methods available:
