@@ -25,7 +25,7 @@ class UserCommand extends Command
     {
         parent::__construct();
         $container = ContainerService::getInstance()->getContainer();
-        $this->userService = $container['service.user'];
+        $this->userService = $container[UserService::class];
     }
 
     /**

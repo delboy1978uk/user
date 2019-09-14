@@ -92,9 +92,9 @@ class UserCriteria extends AbstractCriteria
     }
 
     /**
-     * @return DateTime
+     * @return string
      */
-    public function getRegistrationDate(): DateTime
+    public function getRegistrationDate(): string
     {
         return $this->registrationDate;
     }
@@ -116,9 +116,9 @@ class UserCriteria extends AbstractCriteria
     }
 
     /**
-     * @return DateTime
+     * @return string
      */
-    public function getLastLoginDate(): DateTime
+    public function getLastLoginDate(): string
     {
         return $this->lastLoginDate;
     }

@@ -7,7 +7,6 @@ use Del\Entity\UserInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 
-
 class UserRepository extends EntityRepository
 {
     /** @var QueryBuilder $qb */
@@ -16,7 +15,7 @@ class UserRepository extends EntityRepository
     /**
      * @param UserInterface $user
      * @return UserInterface
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
     public function save(UserInterface $user)
     {
@@ -31,7 +30,7 @@ class UserRepository extends EntityRepository
     /**
      * @param UserInterface $user
      * @param bool $deletePerson
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
     public function delete(UserInterface $user, $deletePerson = false)
     {

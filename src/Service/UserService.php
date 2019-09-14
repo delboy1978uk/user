@@ -150,10 +150,10 @@ class UserService
         /** @var UserInterface $user */
         $user = new $this->userClass();
         $state = new State(State::STATE_UNACTIVATED);
-        $user->setPerson($person)
-             ->setEmail($data['email'])
-             ->setRegistrationDate(new DateTime())
-             ->setState($state);
+        $user->setPerson($person);
+        $user->setEmail($data['email']);
+        $user->setRegistrationDate(new DateTime());
+        $user->setState($state);
 
         $bcrypt = new Bcrypt();
         $bcrypt->setCost(14);
@@ -186,6 +186,7 @@ class UserService
      * @param UserInterface $user
      * @param int $expiry_days
      * @return EmailLink
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function generateEmailLink(UserInterface $user, int $expiry_days = 7): EmailLink
     {
