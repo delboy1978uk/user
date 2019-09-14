@@ -39,7 +39,7 @@ class UserCommandTest extends CommandTest
     {
         $container = ContainerService::getInstance()->getContainer();
         /** @var PersonService $personSvc */
-        $personSvc = $container['service.person'];
+        $personSvc = $container[PersonService::class];
         /** @var UserService $userSvc */
         $userSvc = $container[UserService::class];
 

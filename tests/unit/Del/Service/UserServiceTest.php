@@ -40,7 +40,7 @@ class UserServiceTest extends Test
     protected function _before()
     {
         $container = ContainerService::getInstance()->getContainer();
-        $this->svc = $container['service.user'];
+        $this->svc = $container[UserService::class];
     }
 
     /**

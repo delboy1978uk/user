@@ -2,8 +2,8 @@
 
 namespace Del\Criteria;
 
+use DateTime;
 use Del\Common\Criteria\AbstractCriteria;
-use Nette\Utils\DateTime;
 
 class UserCriteria extends AbstractCriteria
 {
