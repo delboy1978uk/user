@@ -298,7 +298,7 @@ class UserServiceTest extends Test
         $criteria = new UserCriteria();
         $criteria->setEmail('a@b.com');
         $criteria->setRegistrationDate('1970-01-01');
-        $criteria->setLastLoginDate('1970-01-01')
+        $criteria->setLastLoginDate('1970-01-01');
         $criteria->setState((string) State::STATE_UNACTIVATED);
         $user = $this->svc->findOneByCriteria($criteria);
         $this->assertInstanceOf('Del\Entity\User', $user);
