@@ -34,12 +34,19 @@ class UserServiceTest extends Test
     /** @var  EmailLink */
     protected $link;
 
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     */
     protected function _before()
     {
         $container = ContainerService::getInstance()->getContainer();
         $this->svc = $container['service.user'];
     }
 
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     protected function _after()
     {
         if(isset($this->link)) {
@@ -51,6 +58,9 @@ class UserServiceTest extends Test
         unset($this->svc);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCreateFromArray()
     {
         $array = $this->getUserArray('testCreateFromArray');
@@ -64,6 +74,9 @@ class UserServiceTest extends Test
         $this->assertInstanceOf('Del\Person\Entity\Person', $user->getPerson());
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testToArray()
     {
         $array = $this->getUserArray();
@@ -79,7 +92,9 @@ class UserServiceTest extends Test
         $this->assertArrayHasKey('password', $array);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function testSaveUser()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testSaveUser'));
@@ -93,41 +108,47 @@ class UserServiceTest extends Test
         $this->svc->deleteUser($user, true);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function testFindUserById()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testFindUserById'));
         $user = $this->svc->saveUser($user);
         $id = $user->getID();
         $user = $this->svc->findUserById($id);
-        $this->assertInstanceOf('Del\Entity\User', $user);
+        $this->assertInstanceOf(User::class, $user);
         $this->assertEquals('a@b.com', $user->getEmail());
         $this->svc->deleteUser($user, true);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function testFindUserByEmail()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testFindUserByEmail'));
         $this->svc->saveUser($user);
         $user = $this->svc->findUserByEmail('a@b.com');
-        $this->assertInstanceOf('Del\Entity\User', $user);
+        $this->assertInstanceOf(User::class, $user);
         $this->svc->deleteUser($user, true);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function testGenerateEmailLink()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testGenerateEmailLink'));
         $user = $this->svc->saveUser($user);
         $link = $this->svc->generateEmailLink($user);
-        $this->assertInstanceOf('Del\Entity\EmailLink', $link);
+        $this->assertInstanceOf(EmailLink::class, $link);
         $this->svc->deleteEmailLink($link);
         $this->svc->deleteUser($user, true);
     }
 
     /**
-     * @throws EmailLinkException
+     * @throws \Exception
      */
     public function testFindEmailLink()
     {
@@ -152,7 +173,7 @@ class UserServiceTest extends Test
 
 
     /**
-     * @throws EmailLinkException
+     * @throws \Exception
      */
     public function testFindEmailLinkThrowsWhenWrongUser()
     {
@@ -166,7 +187,7 @@ class UserServiceTest extends Test
 
 
     /**
-     * @throws EmailLinkException
+     * @throws \Exception
      */
     public function testFindEmailLinkThrowsWhenExpired()
     {
@@ -180,7 +201,7 @@ class UserServiceTest extends Test
 
 
     /**
-     * @throws UserException
+     * @throws \Exception
      */
     public function testRegisterUser()
     {
@@ -198,7 +219,7 @@ class UserServiceTest extends Test
 
 
     /**
-     * @throws UserException
+     * @throws \Exception
      */
     public function testRegisterUserThrowsInvalidArgumentException()
     {
@@ -209,7 +230,7 @@ class UserServiceTest extends Test
 
 
     /**
-     * @throws UserException
+     * @throws \Exception
      */
     public function testRegisterUserThrowsOnWrongConfirm()
     {
@@ -224,7 +245,7 @@ class UserServiceTest extends Test
 
 
     /**
-     * @throws UserException
+     * @throws \Exception
      */
     public function testRegisterUserThrowsOnExisting()
     {
@@ -238,7 +259,9 @@ class UserServiceTest extends Test
         $this->svc->registerUser($form);
     }
 
-
+    /**
+     * @throws \DException
+     */
     public function testChangePassword()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testChangePassword'));
@@ -248,7 +271,9 @@ class UserServiceTest extends Test
         $this->svc->deleteUser($user, true);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function testFindByCriteria()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testFindByCriteria'));
@@ -263,7 +288,9 @@ class UserServiceTest extends Test
         $this->svc->deleteUser($user, true);
     }
 
-
+    /**
+     * @throws \Exception
+     */
     public function testFindOneByCriteria()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testFindByCriteria'));
@@ -280,7 +307,7 @@ class UserServiceTest extends Test
 
 
     /**
-     * @throws UserException
+     * @throws \Exception
      */
     public function testAuthenticate()
     {
@@ -306,7 +333,7 @@ class UserServiceTest extends Test
 
 
     /**
-     * @throws UserException
+     * @throws \Exception
      */
     public function testAuthenticateThrowsWhenUnactivated()
     {
@@ -319,7 +346,7 @@ class UserServiceTest extends Test
 
 
     /**
-     * @throws UserException
+     * @throws \Exception
      */
     public function testAuthenticateThrowsWhenDisabled()
     {
@@ -333,7 +360,7 @@ class UserServiceTest extends Test
 
 
     /**
-     * @throws UserException
+     * @throws \Exception
      */
     public function testAuthenticateThrowsWhenBanned()
     {
@@ -347,7 +374,7 @@ class UserServiceTest extends Test
 
 
     /**
-     * @throws UserException
+     * @throws \Exception
      */
     public function testAuthenticateThrowsWhenWrongPassword()
     {

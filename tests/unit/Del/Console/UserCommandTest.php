@@ -31,24 +31,28 @@ class UserCommandTest extends CommandTest
         unset($this->command);
     }
 
+    /**
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function testResetPass()
     {
         $container = ContainerService::getInstance()->getContainer();
         /** @var PersonService $personSvc */
         $personSvc = $container['service.person'];
         /** @var UserService $userSvc */
-        $userSvc = $container['service.user'];
+        $userSvc = $container[UserService::class];
 
         $person = new Person();
         $person->setFirstname('Derek');
         $person = $personSvc->savePerson($person);
 
         $user = new User();
-        $user->setEmail('test@123.com')
-            ->setLastLogin(new DateTime())
-            ->setRegistrationDate(new DateTime())
-            ->setPerson($person)
-            ->setState(new State(State::STATE_ACTIVATED));
+        $user->setEmail('test@123.com');
+        $user->setLastLogin(new DateTime());
+        $user->setRegistrationDate(new DateTime());
+        $user->setPerson($person);
+        $user->setState(new State(State::STATE_ACTIVATED));
 
         $user = $userSvc->changePassword($user, 'changeme'); // This saves the user too
 

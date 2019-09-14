@@ -100,9 +100,9 @@ class UserCriteria extends AbstractCriteria
     }
 
     /**
-     * @param DateTime $registrationDate
+     * @param string $registrationDate
      */
-    public function setRegistrationDate(DateTime $registrationDate): void
+    public function setRegistrationDate(string $registrationDate): void
     {
         $this->registrationDate = $registrationDate;
     }
@@ -124,9 +124,9 @@ class UserCriteria extends AbstractCriteria
     }
 
     /**
-     * @param mixed $lastLoginDate
+     * @param string $lastLoginDate
      */
-    public function setLastLoginDate(DateTime $lastLoginDate): void
+    public function setLastLoginDate(string $lastLoginDate): void
     {
         $this->lastLoginDate = $lastLoginDate;
     }
