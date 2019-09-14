@@ -3,10 +3,10 @@ language: php
 php:
   - 7.1
   - 7.2
+  - 7.3
 
-branches:
-  except:
-    - gh-pages
+services:
+  - mysql
 
 addons:
   hosts:
