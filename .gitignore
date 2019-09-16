@@ -3,6 +3,7 @@ composer.phar
 composer.lock
 vendor/
 
+
 #ide
 .idea/
 .DS_Store
@@ -10,4 +11,5 @@ vendor/
 #test output
 tests/_output
 
-*.local.php
+#migrant config
+.migrant_local
