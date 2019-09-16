@@ -1,12 +1,10 @@
 <?php
-// Here you can initialize variables that will be available to your tests
+
 use Del\Common\Config\DbCredentials;
 use Del\Common\ContainerService;
 use Del\UserPackage;
 
-$creds = file_exists('migrant-cfg.local.php')
-            ? require_once 'migrant-cfg.local.php'
-            : require_once 'migrant-cfg.php';
+$creds = require_once '.migrant';
 
 $dbCredentials = new DbCredentials($creds['db']);
 $userPackage = new UserPackage();
