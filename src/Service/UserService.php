@@ -323,4 +323,12 @@ class UserService
     {
         $this->userClass = $fullyQualifiedClassName;
     }
+
+    /**
+     * @return PersonService
+     */
+    public function getPersonSvc(): PersonService
+    {
+        return $this->personSvc;
+    }
 }

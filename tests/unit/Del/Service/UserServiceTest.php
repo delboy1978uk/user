@@ -4,6 +4,7 @@ namespace DelTesting\Service;
 
 use Codeception\TestCase\Test;
 use Del\Person\Entity\Person;
+use Del\Person\Service\PersonService;
 use Del\UserPackage;
 use Del\Criteria\UserCriteria;
 use Del\Entity\EmailLink;
@@ -269,6 +270,17 @@ class UserServiceTest extends Test
         $user = $this->svc->changePassword($user,'testpass');
         $this->assertTrue($this->svc->checkPassword($user,'testpass'));
         $this->svc->deleteUser($user, true);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testGetPersonService()
+    {
+        $user = $this->svc->createFromArray($this->getUserArray('testChangePassword'));
+        $user = $this->svc->saveUser($user);
+        $user = $this->svc->changePassword($user,'testpass');
+        $this->assertInstanceOf(PersonService::class, $this->svc->getPersonSvc());
     }
 
     /**
