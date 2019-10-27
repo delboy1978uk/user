@@ -278,8 +278,8 @@ class UserServiceTest extends Test
     public function testGetPersonService()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testChangePassword'));
-        $this->user = $user;
         $user = $this->svc->saveUser($user);
+        $this->user = $user;
         $user = $this->svc->changePassword($user,'testpass');
         $this->assertInstanceOf(PersonService::class, $this->svc->getPersonSvc());
     }
