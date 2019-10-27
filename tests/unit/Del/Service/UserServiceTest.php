@@ -278,8 +278,8 @@ class UserServiceTest extends Test
     public function testFindByCriteria()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testFindByCriteria'));
-        $this->user = $user;
         $this->svc->saveUser($user);
+        $this->user = $user;
         $criteria = new UserCriteria();
         $criteria->setEmail('a@b.com');
         $criteria->setRegistrationDate('1970-01-01');
