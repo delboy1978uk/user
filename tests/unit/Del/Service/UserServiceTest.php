@@ -275,18 +275,6 @@ class UserServiceTest extends Test
     /**
      * @throws \Exception
      */
-    public function testGetPersonService()
-    {
-        $user = $this->svc->createFromArray($this->getUserArray('testChangePassword'));
-        $user = $this->svc->saveUser($user);
-        $this->user = $user;
-        $user = $this->svc->changePassword($user,'testpass');
-        $this->assertInstanceOf(PersonService::class, $this->svc->getPersonSvc());
-    }
-
-    /**
-     * @throws \Exception
-     */
     public function testFindByCriteria()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testFindByCriteria'));
@@ -401,6 +389,18 @@ class UserServiceTest extends Test
     }
 
 
+
+    /**
+     * @throws \Exception
+     */
+    public function testGetPersonService()
+    {
+        $user = $this->svc->createFromArray($this->getUserArray('testChangePassword'));
+        $user = $this->svc->saveUser($user);
+        $this->user = $user;
+        $user = $this->svc->changePassword($user,'testpass');
+        $this->assertInstanceOf(PersonService::class, $this->svc->getPersonSvc());
+    }
 
 
 
