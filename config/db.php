@@ -3,10 +3,11 @@
 return [
     'db' => [
         'driver' => 'pdo_mysql',
+        'host' => '127.0.0.1',
+        'database' => 'delboy1978uk',
         'dbname' => 'delboy1978uk',
         'user' => 'dbuser',
-        'password' => 'dbpass',
-        'host' => '127.0.0.1',
+        'password' => 'dbpass'
     ],
     'packages' => [
         'delboy1978uk/person',
