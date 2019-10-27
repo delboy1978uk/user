@@ -4,10 +4,7 @@ use Del\Common\Config\DbCredentials;
 use Del\Common\ContainerService;
 use Del\UserPackage;
 
-$creds = file_exists('migrant-cfg.local.php')
-            ? require_once 'migrant-cfg.local.php'
-            : require_once 'migrant-cfg.php';
-
+$creds = require_once 'config/db.php';
 $dbCredentials = new DbCredentials($creds['db']);
 $userPackage = new UserPackage();
 $containerSvc = ContainerService::getInstance();
