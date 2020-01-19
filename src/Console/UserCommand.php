@@ -21,11 +21,10 @@ class UserCommand extends Command
      * UserCommand constructor.
      * @throws \Doctrine\ORM\ORMException
      */
-    public function __construct()
+    public function __construct(UserService $userService)
     {
         parent::__construct();
-        $container = ContainerService::getInstance()->getContainer();
-        $this->userService = $container[UserService::class];
+        $this->userService = $userService;
     }
 
     /**
