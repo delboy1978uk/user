@@ -56,7 +56,7 @@ class UserCommandTest extends CommandTest
 
         $user = $userSvc->changePassword($user, 'changeme'); // This saves the user too
 
-        $command = new UserCommand();
+        $command = new UserCommand($userSvc);
         $output = $this->runCommand($command,[
             'email' => 'test@123.com',
             'newPassword' => 'testPass!'
