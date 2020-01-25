@@ -70,7 +70,7 @@ class UserCommandTest extends CommandTest
         $userSvc->deleteUser($user);
         $personSvc->deletePerson($person);
 
-        $this->assertContains('Password changed for test@123.com', $output);
+        $this->assertStringContainsString('Password changed for test@123.com', $output);
     }
 
     public function testNotFound()
@@ -81,6 +81,6 @@ class UserCommandTest extends CommandTest
             'newPassword' => 'irrelevant'
         ]);
 
-        $this->assertContains('No User Found.', $output);
+        $this->assertStringContainsString('No User Found.', $output);
     }
 }
