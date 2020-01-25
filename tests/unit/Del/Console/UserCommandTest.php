@@ -20,10 +20,15 @@ class UserCommandTest extends CommandTest
      * @var UserCommand
      */
     protected $command;
+    /** @var UserService $userService */
+    protected $userService;
 
     protected function _before()
     {
-        $this->command = new UserCommand();
+        $container = ContainerService::getInstance()->getContainer();
+        /** @var UserService $userSvc */
+        $this->userService = $container[UserService::class];
+        $this->command = new UserCommand($this->userService);
     }
 
     protected function _after()
@@ -70,7 +75,7 @@ class UserCommandTest extends CommandTest
 
     public function testNotFound()
     {
-        $command = new UserCommand();
+        $command = new UserCommand($this->userService);
         $output = $this->runCommand($command,[
             'email' => 'nobody@home.com',
             'newPassword' => 'irrelevant'
