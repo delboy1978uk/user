@@ -77,7 +77,7 @@ class UserTest extends \Codeception\TestCase\Test
 
     public function testStateValueObject()
     {
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $this->user->setState(new State(666));
     }
 }

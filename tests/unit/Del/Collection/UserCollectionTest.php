@@ -89,7 +89,7 @@ class UserCollectionTest extends Test
         $this->assertEquals('a@b.com',$collection[1]->getEmail());
         $user = new User();
         $user->setId(4);
-        $this->setExpectedException('LogicException');
+        $this->expectException('LogicException');
         $collection->update($user);
     }
 
