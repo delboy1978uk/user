@@ -16,7 +16,7 @@ use Del\Person\Service\PersonService;
 use Del\Value\User\State;
 use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
-use Zend\Crypt\Password\Bcrypt;
+use Laminas\Crypt\Password\Bcrypt;
 
 class UserService
 {
