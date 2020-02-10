@@ -11,7 +11,7 @@
   "require": {
     "php": "^7.1",
     "delboy1978uk/person": "^6.0",
-    "laminas/laminas-crypt": "^2.5.2"
+    "laminas/laminas-crypt": "^3.3"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
