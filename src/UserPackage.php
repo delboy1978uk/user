@@ -2,14 +2,15 @@
 
 namespace Del;
 
-use Del\Common\Container\RegistrationInterface;
+use Barnacle\EntityRegistrationInterface;
+use Barnacle\RegistrationInterface;
 use Del\Person\PersonPackage;
 use Del\Person\Service\PersonService;
 use Del\Service\UserService;
 use Barnacle\Container;
 use Doctrine\ORM\EntityManager;
 
-class UserPackage implements RegistrationInterface
+class UserPackage implements RegistrationInterface, EntityRegistrationInterface
 {
     /**
      * @param Container $c
@@ -29,13 +30,11 @@ class UserPackage implements RegistrationInterface
         $c[UserService::class] = $c->factory($function);
     }
 
+    /**
+     * @return string
+     */
     public function getEntityPath(): string
     {
         return 'vendor/delboy1978uk/user/src/Entity';
-    }
-
-    public function hasEntityPath(): bool
-    {
-        return true;
     }
 }
