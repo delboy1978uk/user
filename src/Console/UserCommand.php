@@ -60,6 +60,7 @@ class UserCommand extends Command
         $criteria = new UserCriteria();
         $criteria->setEmail($email);
         $user = $this->userService->findOneByCriteria($criteria);
+
         if ($user === null) {
             $output->writeln('No User Found.');
         } else {
@@ -67,5 +68,7 @@ class UserCommand extends Command
             $this->userService->saveUser($user);
             $output->writeln('Password changed for '.$email);
         }
+
+        return 0;
     }
 }
