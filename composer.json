@@ -10,6 +10,7 @@
   ],
   "require": {
     "php": "^7.2",
+    "delboy1978uk/bone-console": "^1.1",
     "delboy1978uk/person": "^6.1",
     "laminas/laminas-crypt": "^3.3"
   },

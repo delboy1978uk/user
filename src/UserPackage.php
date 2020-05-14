@@ -48,7 +48,7 @@ class UserPackage implements RegistrationInterface, EntityRegistrationInterface,
     {
         $userService = $container->get(UserService::class);
         $userCommand = new UserCommand($userService);
-        
+
         return [$userCommand];
     }
 }
