@@ -125,6 +125,22 @@ class UserService
     }
 
     /**
+     * @param User $user
+     * @return bool
+     */
+    public function hasProfile(User $user): bool
+    {
+        $has = false;
+        $person = $user->getPerson();
+
+        if (!empty($person->getFirstname()) && !empty($person->getLastname())) {
+            $has = true;
+        }
+
+        return $has;
+    }
+
+    /**
      * @param array $data
      * @return UserInterface
      * @throws UserException
