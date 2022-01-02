@@ -25,7 +25,7 @@ class BaseUser implements UserInterface
     private $email;
 
     /**
-     * @ORM\OneToOne(targetEntity="Del\Person\Entity\Person",cascade="persist")
+     * @ORM\OneToOne(targetEntity="Del\Person\Entity\Person",cascade={"persist"})
      */
     private $person;
 
