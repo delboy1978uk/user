@@ -33,7 +33,7 @@ class UserCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('reset-pass')
+            ->setName('user:reset-pass')
             ->setDescription('Resets a user\'s password')
             ->addArgument(
                 'email',
@@ -69,6 +69,6 @@ class UserCommand extends Command
             $output->writeln('Password changed for '.$email);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }
