@@ -1,73 +1,25 @@
-# User
+# user
 [![Build Status](https://travis-ci.org/delboy1978uk/user.png?branch=master)](https://travis-ci.org/delboy1978uk/user) [![Code Coverage](https://scrutinizer-ci.com/g/delboy1978uk/user/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/delboy1978uk/user/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/delboy1978uk/user/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/delboy1978uk/user/?branch=master) <br />
-A persistable User object and service.
-## Installation
+A persistable User object and service for use with Doctrine.
+## installation
 Install via composer into your project:
 ```
 composer require delboy1978uk/user
 ```
-## Database Setup
-To set up the database tables (we use migrations to control this, so it's super quick), create a migrant-cfg.php with 
-your db credentials:
-  ```php
-  <?php
-  
-  return [
-      'db' => [
-          'driver' => 'pdo_mysql',
-          'dbname' => 'yourdb',
-          'user' => 'yourusername',
-          'password' => 'yourpass',
-      ],
-      'packages' => [
-          'delboy1978uk/user',
-      ],
-  ];
-  ```
-  Then from the root of your site, call the following command:
-```
-migrant migrate
-```
-A message appears, type `y` to continue. Your tables have been created! If the command is not found, this means `vendor/bin` isn't in your path, you should add it! Edit your `~/.bashrc` or `~/.zshrc` with this:
-```
-export PATH=$PATH:vendor/bin
-```
-## Container Setup
-This package uses `delboy1978uk/common`, which utilises Doctrine 2 as the ORM and Pimple as the dependency injection container.
- To use this package, we set up the container, and register the UserPackage:
+## setup
+Add `vendor/delboy1978uk/user/src/Entity` to your Doctrine entity paths and update your DB
+## usage
+To create the user service, pass your Doctrine entity mananger and the `delboy1978uk/person` Person service into the constructor:
 ```php
-<?php
-
-use Del\Common\Config\DbCredentials;
-use Del\Common\ContainerService;
-use Del\UserPackage;
-
-$userPackage = new UserPackage();
-
-$credentials = new DbCredentials([
-    'driver' => 'pdo_mysql',
-    'dbname' => 'yourdb',
-    'user' => 'yourusername',
-    'password' => 'yourpass',
-]);
-
-
-$containerSvc = ContainerService::getInstance();
-$containerSvc->setDbCredentials($credentials);
-$containerSvc->registerToContainer($userPackage);
-```
-Once you have registered the DB credentials and user package, you can call the user service (or anything else in your 
-container) anywhere in your project in the following way:
-```php
-<?php 
-use Del\Common\ContainerService;
+use Del\Person\Service\PersonService;
 use Del\Service\UserService;
+use Doctrine\ORM\EntityManager;
 
-$container = ContainerService::getInstance()->getContainer();
-/** @var \Del\Service\UserService $userService */
-$userService = $container[UserService::class];
+// $entityManager = [get your Doctrine EntityManager here];
+$personService = new PersonService($entityManager);
+$userService = new UserService($entityManager, $personService);
 ```
-## The User Service
+### The User Service
 All manipulation of our User objects happens through the UserService, which has a variety of methods available:
 ```php
 <?php
@@ -89,7 +41,7 @@ $emailLink = $svc->generateEmailLink($user, $daysTillExpiry); // For emailing wi
 $emailLink = $svc->findEmailLink($email, $token); // Finds the email link for that user
 $emailLink = $svc->deleteEmailLink($link); // Deletes from the DB
 ```
-### Registering a user
+#### Registering a user
 Pass in an array with keys `email`, `password`, and `confirm`, confirm being the password confirmation field.
 ```php
 <?php
@@ -107,7 +59,7 @@ You can now email your user, and use findEmailLink when they arrive to activate 
 $emailLink = $svc->findEmailLink($email, $token); 
 ```
 You can then update the users state to active and save.
-## The User Entity
+### The User Entity
 Usage as follows.
 ```php
 <?php
@@ -117,7 +69,7 @@ use Del\Person\Entity\Person;
 use Del\Value\User\State;
 
 $user = new User();
-$user->setID(12345); // You shouldn't have to, the ORM will do this
+$user->setId(12345); // You shouldn't have to, the ORM will do this
 $user->setEmail('a@b.com');
 $user->setPassword($password); // Not encrypted - use the service which will in turn call this 
 $user->setState(new State(State::STATE_ACTIVATED)); 
@@ -126,7 +78,7 @@ $user->setLastLogin($registrationDate); // A DateTime object
 $user->setPerson(new Person()); // See delboy1978uk/person
 ```
 The User lib also uses `delboy1978uk/person`, which you can use to store some personal details of the user, if you like. 
-## The User Collection
+### The User Collection
 This is just a fancy array, extending `Doctrine\Common\Collections\ArrayCollection`. It has the usual stuff:
 ```php
 <?php
@@ -137,9 +89,9 @@ while ($collection->valid()) {
     $collection->next();
 }
 ```
-## The User Repository
+### The User Repository
 The Repository class is within the service, and contains all the database queries.
-### Query Criteria
+#### Query Criteria
 You can use a UserCriteria to refine the results returned like so:
 ```php
 <?php
