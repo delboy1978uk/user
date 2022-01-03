@@ -24,5 +24,10 @@
       "Del\\": "src/",
       "DelTesting\\": "tests/unit/Del/"
     }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true
+    }
   }
 }

@@ -20,14 +20,11 @@ use Laminas\Crypt\Password\Bcrypt;
 
 class UserService
 {
-    /** @var EntityManager $em */
-    protected $em;
+    protected EntityManager $em;
+    private PersonService $personSvc;
+    private string $userClass;
 
-    /** @var  PersonService */
-    private $personSvc;
-
-    /** @var string $userClass */
-    private $userClass;
+    private UserRepository $userRepository;
 
     public function __construct(EntityManager $entityManager,  PersonService $personService)
     {
@@ -62,8 +59,7 @@ class UserService
      */
     public function toArray(UserInterface $user): array
     {
-        return array
-        (
+        return [
             'id' => $user->getID(),
             'email' => $user->getEmail(),
             'person' => $user->getPerson(),
@@ -71,7 +67,7 @@ class UserService
             'state' => $user->getState()->getValue(),
             'registrationDate' => $user->getRegistrationDate() === null ? null : $user->getRegistrationDate()->format('Y-m-d H:i:s'),
             'lastLoginDate' => $user->getLastLoginDate() === null ? null : $user->getLastLoginDate()->format('Y-m-d H:i:s'),
-        );
+        ];
     }
 
     /**
@@ -93,6 +89,7 @@ class UserService
         $criteria = new UserCriteria();
         $criteria->setId($id);
         $results = $this->getUserRepository()->findByCriteria($criteria);
+
         return (count($results)) ? $results[0] : null;
     }
 
@@ -108,27 +105,21 @@ class UserService
         return count($result) ? $result[0] : null;
     }
 
-    /**
-     * @return \Doctrine\Common\Persistence\ObjectRepository|\Doctrine\ORM\EntityRepository
-     */
-    private function getUserRepository(): UserRepository
+    protected function getUserRepository(): UserRepository
     {
-        return $this->em->getRepository($this->userClass);
+        if (!isset($this->userRepository)) {
+            $this->userRepository = $this->em->getRepository($this->userClass);
+        }
+
+        return $this->userRepository;
     }
 
-    /**
-     * @return \Doctrine\Common\Persistence\ObjectRepository|\Doctrine\ORM\EntityRepository
-     */
     private function getEmailLinkRepository(): EmailLinkRepository
     {
         return $this->em->getRepository(EmailLink::class);
     }
 
-    /**
-     * @param User $user
-     * @return bool
-     */
-    public function hasProfile(User $user): bool
+    public function hasProfile(UserInterface $user): bool
     {
         $has = false;
         $person = $user->getPerson();
@@ -158,6 +149,7 @@ class UserService
         $criteria = new UserCriteria();
         $criteria->setEmail($data['email']);
         $user = $this->getUserRepository()->findByCriteria($criteria);
+
         if(!empty($user)) {
             throw new UserException(UserException::USER_EXISTS);
         }
@@ -316,6 +308,7 @@ class UserService
     public function findOneByCriteria(UserCriteria $criteria): ?UserInterface
     {
         $results = $this->getUserRepository()->findByCriteria($criteria);
+
         return count($results) > 0 ? $results[0] : null;
     }
 

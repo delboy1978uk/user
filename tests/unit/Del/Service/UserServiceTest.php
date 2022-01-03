@@ -3,59 +3,62 @@
 namespace DelTesting\Service;
 
 use Codeception\TestCase\Test;
+use DateTime;
+use Del\Entity\UserInterface;
 use Del\Person\Entity\Person;
 use Del\Person\Service\PersonService;
-use Del\UserPackage;
 use Del\Criteria\UserCriteria;
 use Del\Entity\EmailLink;
 use Del\Entity\User;
 use Del\Exception\EmailLinkException;
 use Del\Exception\UserException;
-use Del\Factory\CountryFactory;
+use Del\Repository\EmailLink as EmailLinkRepository;
+use Del\Repository\UserRepository;
 use Del\Service\UserService;
-use Del\Common\ContainerService;
 use Del\Value\User\State;
-
+use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class UserServiceTest extends Test
 {
-   /**
-    * @var \UnitTester
-    */
-    protected $tester;
+    private MockObject $userRepo;
+    private MockObject $emailLinkRepo;
+    private UserService $svc;
+    private UserInterface $user;
+    private EmailLink $link;
 
-    /**
-     * @var UserService
-     */
-    protected $svc;
-
-    /** @var  User */
-    protected $user;
-
-    /** @var  EmailLink */
-    protected $link;
-
-    /**
-     * @throws \Doctrine\ORM\ORMException
-     */
     protected function _before()
     {
-        $container = ContainerService::getInstance()->getContainer();
-        $this->svc = $container[UserService::class];
+        $this->link = new EmailLink();
+        $this->link->setToken('XXXXX');
+        $this->link->setExpiryDate(new DateTime('+7 days'));
+        $user = new User();
+        $user->setId(6);
+        $user->setEmail('man@work.com');
+        $user->setPerson(new Person());
+        $this->user = $user;
+        $this->link->setUser($user);
+        $this->userRepo = $this->makeEmpty(UserRepository::class, [
+            'save' => $user,
+        ]);
+        $this->emailLinkRepo = $this->makeEmpty(EmailLinkRepository::class, [
+            'save' => $this->link,
+        ]);
+        $em = $this->makeEmpty(EntityManager::class, [
+            'merge' => $this->link
+        ]);
+        $map = [
+            [User::class, $this->userRepo],
+            [EmailLink::class, $this->emailLinkRepo],
+        ];
+        $em->method('getRepository')->willReturnMap($map);
+        $personService = $this->makeEmpty(PersonService::class);
+        $this->svc = new UserService($em, $personService);
+        $this->user = $this->svc->changePassword($user,'testpass');
     }
 
-    /**
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
     protected function _after()
     {
-        if(isset($this->link)) {
-            $this->svc->deleteEmailLink($this->link);
-        }
-        if(isset($this->user)) {
-            $this->svc->deleteUser($this->user, true);
-        }
         unset($this->svc);
     }
 
@@ -66,7 +69,7 @@ class UserServiceTest extends Test
     {
         $array = $this->getUserArray('testCreateFromArray');
         $user = $this->svc->createFromArray($array);
-        $this->assertInstanceOf('Del\Entity\User', $user);
+        $this->assertInstanceOf(User::class, $user);
         $this->assertEquals('a@b.com', $user->getEmail());
         $this->assertEquals('testCreateFromArray', $user->getPassword());
         $this->assertEquals('1970-01-01', $user->getRegistrationDate()->format('Y-m-d'));
@@ -93,14 +96,11 @@ class UserServiceTest extends Test
         $this->assertArrayHasKey('password', $array);
     }
 
-    /**
-     * @throws \Exception
-     */
     public function testSaveUser()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testSaveUser'));
         $user = $this->svc->saveUser($user);
-        $this->assertInstanceOf('Del\Entity\User', $user);
+        $this->assertInstanceOf(User::class, $user);
         $this->assertTrue(is_numeric($user->getId()));
 
         $user->setEmail('a@b.com');
@@ -109,25 +109,18 @@ class UserServiceTest extends Test
         $this->svc->deleteUser($user, true);
     }
 
-    /**
-     * @throws \Exception
-     */
     public function testFindUserById()
     {
-        $user = $this->svc->createFromArray($this->getUserArray('testFindUserById'));
-        $user = $this->svc->saveUser($user);
-        $id = $user->getID();
-        $user = $this->svc->findUserById($id);
+        $this->userRepo->method('findByCriteria')->willReturn([$this->user]);
+        $user = $this->svc->findUserById(6);
         $this->assertInstanceOf(User::class, $user);
-        $this->assertEquals('a@b.com', $user->getEmail());
+        $this->assertEquals('man@work.com', $user->getEmail());
         $this->svc->deleteUser($user, true);
     }
 
-    /**
-     * @throws \Exception
-     */
     public function testFindUserByEmail()
     {
+        $this->userRepo->method('findByCriteria')->willReturn([$this->user]);
         $user = $this->svc->createFromArray($this->getUserArray('testFindUserByEmail'));
         $this->svc->saveUser($user);
         $user = $this->svc->findUserByEmail('a@b.com');
@@ -135,9 +128,6 @@ class UserServiceTest extends Test
         $this->svc->deleteUser($user, true);
     }
 
-    /**
-     * @throws \Exception
-     */
     public function testGenerateEmailLink()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testGenerateEmailLink'));
@@ -148,11 +138,9 @@ class UserServiceTest extends Test
         $this->svc->deleteUser($user, true);
     }
 
-    /**
-     * @throws \Exception
-     */
     public function testFindEmailLink()
     {
+        $this->emailLinkRepo->method('findByToken')->willReturn($this->link);
         $user = $this->svc->createFromArray($this->getUserArray('testFindEmailLink'));
         $user = $this->svc->saveUser($user);
         $link = $this->svc->generateEmailLink($user);
@@ -163,65 +151,48 @@ class UserServiceTest extends Test
         $this->svc->deleteUser($user, true);
     }
 
-    /**
-     * @throws EmailLinkException
-     */
     public function testFindEmailLinkThrowsWhenNotFound()
     {
-        $this->expectException('Del\Exception\EmailLinkException', EmailLinkException::LINK_NOT_FOUND);
+        $this->expectException(EmailLinkException::class);
+        $this->expectExceptionMessage(EmailLinkException::LINK_NOT_FOUND);
         $this->svc->findEmailLink('not@important.com','notfound');
     }
 
-
-    /**
-     * @throws \Exception
-     */
     public function testFindEmailLinkThrowsWhenWrongUser()
     {
-        $this->expectException('Del\Exception\EmailLinkException', EmailLinkException::LINK_NO_MATCH);
-        $this->user = $this->svc->createFromArray($this->getUserArray());
-        $this->user = $this->svc->saveUser($this->user);
-        $this->link = $this->svc->generateEmailLink($this->user);
-        $token = $this->link->getToken();
-        $this->svc->findEmailLink('wrong@email.com',$token);
+        $this->emailLinkRepo->method('findByToken')->willReturn($this->link);
+        $this->expectException(EmailLinkException::class);
+        $this->expectExceptionMessage(EmailLinkException::LINK_NO_MATCH);
+        $this->svc->findEmailLink('wrong@email.com', 'XXXXX');
     }
 
-
-    /**
-     * @throws \Exception
-     */
     public function testFindEmailLinkThrowsWhenExpired()
     {
-        $this->expectException('Del\Exception\EmailLinkException', EmailLinkException::LINK_EXPIRED);
-        $user = $this->svc->createFromArray($this->getUserArray('testFindEmailLinkThrowsWhenExpired'));
-        $this->user = $this->svc->saveUser($user);
-        $this->link = $this->svc->generateEmailLink($this->user,-8);
-        $token = $this->link->getToken();
-        $this->svc->findEmailLink($user->getEmail(),$token);
+        $link = new EmailLink();
+        $link->setUser($this->user);
+        $link->setToken('XXXXX');
+        $link->setExpiryDate(new DateTime('-2 days'));
+        $this->emailLinkRepo->method('findByToken')->willReturn($link);
+        $this->expectException(EmailLinkException::class);
+        $this->expectExceptionMessage(EmailLinkException::LINK_EXPIRED);
+        $this->svc->findEmailLink('man@work.com', 'XXXXX');
     }
 
-
-    /**
-     * @throws \Exception
-     */
     public function testRegisterUser()
     {
+        $this->userRepo->method('findByCriteria')->willReturn(null);
         $form = [
             'email' => 'pass@test.com',
             'password' => '123456',
             'confirm' => '123456',
         ];
         $user = $this->svc->registerUser($form);
-        $this->assertInstanceOf('Del\Entity\User', $user);
+        $this->assertInstanceOf(User::class, $user);
         $this->assertEquals('pass@test.com',$user->getEmail());
         $this->assertEquals(State::STATE_UNACTIVATED, $user->getState()->getValue());
         $this->svc->deleteUser($user, true);
     }
 
-
-    /**
-     * @throws \Exception
-     */
     public function testRegisterUserThrowsInvalidArgumentException()
     {
         $this->expectException('InvalidArgumentException');
@@ -229,13 +200,10 @@ class UserServiceTest extends Test
         $this->svc->registerUser($form);
     }
 
-
-    /**
-     * @throws \Exception
-     */
     public function testRegisterUserThrowsOnWrongConfirm()
     {
-        $this->expectException(UserException::class, UserException::WRONG_PASSWORD);
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage(UserException::WRONG_PASSWORD);
         $form = [
             'email' => 'pass@test.com',
             'password' => '123456',
@@ -244,13 +212,11 @@ class UserServiceTest extends Test
         $this->svc->registerUser($form);
     }
 
-
-    /**
-     * @throws \Exception
-     */
     public function testRegisterUserThrowsOnExisting()
     {
-        $this->expectException(UserException::class, UserException::USER_EXISTS);
+        $this->userRepo->method('findByCriteria')->willReturn([$this->user]);
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage(UserException::USER_EXISTS);
         $form = [
             'email' => 'pass@test.com',
             'password' => '123456',
@@ -260,153 +226,111 @@ class UserServiceTest extends Test
         $this->svc->registerUser($form);
     }
 
-    /**
-     * @throws \Exception
-     */
     public function testChangePassword()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testChangePassword'));
-        $user = $this->svc->saveUser($user);
         $user = $this->svc->changePassword($user,'testpass');
         $this->assertTrue($this->svc->checkPassword($user,'testpass'));
-        $this->svc->deleteUser($user, true);
     }
 
-    /**
-     * @throws \Exception
-     */
     public function testFindByCriteria()
     {
-        $user = $this->svc->createFromArray($this->getUserArray('testFindByCriteria'));
-        $this->svc->saveUser($user);
+        $this->userRepo->method('findByCriteria')->willReturn([$this->user]);
         $criteria = new UserCriteria();
-        $criteria->setEmail('a@b.com');
+        $criteria->setEmail('man@work.com');
         $criteria->setRegistrationDate('1970-01-01');
         $criteria->setLastLoginDate('1970-01-01');
         $criteria->setState((string) State::STATE_UNACTIVATED);
         $user = $this->svc->findByCriteria($criteria)[0];
-        $this->assertInstanceOf('Del\Entity\User', $user);
-        $this->svc->deleteUser($user, true);
+        $this->assertInstanceOf(User::class, $user);
     }
 
-    /**
-     * @throws \Exception
-     */
     public function testFindOneByCriteria()
     {
-        $user = $this->svc->createFromArray($this->getUserArray('testFindByCriteria'));
-        $this->svc->saveUser($user);
+        $this->userRepo->method('findByCriteria')->willReturn([$this->user]);
         $criteria = new UserCriteria();
         $criteria->setEmail('a@b.com');
         $criteria->setRegistrationDate('1970-01-01');
         $criteria->setLastLoginDate('1970-01-01');
         $criteria->setState((string) State::STATE_UNACTIVATED);
+        $criteria->setOrderDirection(UserCriteria::ORDER_ASC);
+        $criteria->setPagination(2, 5);
         $user = $this->svc->findOneByCriteria($criteria);
-        $this->assertInstanceOf('Del\Entity\User', $user);
-        $this->svc->deleteUser($user, true);
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertTrue($criteria->hasOrderDirection());
+        $this->assertEquals(UserCriteria::ORDER_ASC, $criteria->getOrderDirection());
     }
 
-
-    /**
-     * @throws \Exception
-     */
     public function testAuthenticate()
     {
-        $user = $this->svc->createFromArray($this->getUserArray('testAuthenticate'));
-        $user = $this->svc->changePassword($user,'testpass');
-        $user->setState(new State(State::STATE_ACTIVATED));
-        $user = $this->svc->saveUser($user);
-        $this->assertEquals(State::STATE_ACTIVATED, $user->getState()->getValue());
-        $id = $this->svc->authenticate('a@b.com','testpass');
+        $this->user->setState(new State(State::STATE_ACTIVATED));
+        $this->userRepo->method('findByCriteria')->willReturn([$this->user]);
+        $id = $this->svc->authenticate('man@work.com','testpass');
         $this->assertTrue(is_numeric($id));
-        $this->svc->deleteUser($user, true);
     }
 
-
-    /**
-     * @throws UserException
-     */
     public function testAuthenticateThrowsWhenNotFound()
     {
-        $this->expectException(UserException::class,UserException::USER_NOT_FOUND);
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage(UserException::USER_NOT_FOUND);
         $this->svc->authenticate('not@found.com','testpass');
     }
 
-
-    /**
-     * @throws \Exception
-     */
     public function testAuthenticateThrowsWhenUnactivated()
     {
-        $this->expectException(UserException::class,UserException::USER_UNACTIVATED);
-        $user = $this->svc->createFromArray($this->getUserArray('testAuthenticateThrowsWhenUnactivated'));
-        $user = $this->svc->changePassword($user,'testpass');
-        $this->user = $this->svc->saveUser($user);
-        $this->svc->authenticate('a@b.com','testpass');
+        $this->userRepo->method('findByCriteria')->willReturn([$this->user]);
+        $this->user->setState(new State(State::STATE_UNACTIVATED));
+        $this->emailLinkRepo->method('findByToken')->willReturn($this->link);
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage(UserException::USER_UNACTIVATED);
+        $this->svc->authenticate('man@work.com','testpass');
     }
 
 
-    /**
-     * @throws \Exception
-     */
     public function testAuthenticateThrowsWhenDisabled()
     {
-        $this->expectException(UserException::class,UserException::USER_DISABLED);
-        $user = $this->svc->createFromArray($this->getUserArray('testAuthenticateThrowsWhenDisabled'));
-        $user = $this->svc->changePassword($user,'testpass');
-        $user->setState(new State(State::STATE_DISABLED));
-        $this->user = $this->svc->saveUser($user);
-        $this->svc->authenticate('a@b.com','testpass');
+        $this->userRepo->method('findByCriteria')->willReturn([$this->user]);
+        $this->user->setState(new State(State::STATE_DISABLED));
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage(UserException::USER_DISABLED);
+        $this->svc->authenticate('man@work.com','testpass');
     }
 
-
-    /**
-     * @throws \Exception
-     */
     public function testAuthenticateThrowsWhenBanned()
     {
-        $this->expectException(UserException::class,UserException::USER_BANNED);
-        $user = $this->svc->createFromArray($this->getUserArray('testAuthenticateThrowsWhenBanned'));
-        $user = $this->svc->changePassword($user,'testpass');
-        $user->setState(new State(State::STATE_BANNED));
-        $this->user = $this->svc->saveUser($user);
-        $this->svc->authenticate('a@b.com','testpass');
+        $this->userRepo->method('findByCriteria')->willReturn([$this->user]);
+        $this->user->setState(new State(State::STATE_BANNED));
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage(UserException::USER_BANNED);
+        $this->svc->authenticate('man@work.com','testpass');
     }
 
-
-    /**
-     * @throws \Exception
-     */
     public function testAuthenticateThrowsWhenWrongPassword()
     {
-        $this->expectException(UserException::class,UserException::WRONG_PASSWORD);
-        $user = $this->svc->createFromArray($this->getUserArray('testAuthenticateThrowsWhenWrongPassword'));
-        $user = $this->svc->changePassword($user,'testpass');
-        $user->setState(new State(State::STATE_ACTIVATED));
-        $this->user = $this->svc->saveUser($user);
-        $this->svc->authenticate('a@b.com','oops');
+        $this->userRepo->method('findByCriteria')->willReturn([$this->user]);
+        $this->user->setState(new State(State::STATE_ACTIVATED));
+        $this->expectException(UserException::class);
+        $this->expectExceptionMessage(UserException::WRONG_PASSWORD);
+        $this->svc->authenticate('man@work.com','oops');
     }
 
-
-
-    /**
-     * @throws \Exception
-     */
     public function testGetPersonService()
     {
         $user = $this->svc->createFromArray($this->getUserArray('testChangePassword'));
         $user = $this->svc->saveUser($user);
         $this->user = $user;
-        $user = $this->svc->changePassword($user,'testpass');
+        $this->svc->changePassword($user,'testpass');
         $this->assertInstanceOf(PersonService::class, $this->svc->getPersonSvc());
     }
 
+    public function testHasProfile()
+    {
+        $this->assertFalse($this->svc->hasProfile($this->user));
+        $this->user->getPerson()->setFirstname('Arnold');
+        $this->user->getPerson()->setLastname('Schwarzenegger');
+        $this->assertTrue($this->svc->hasProfile($this->user));
+    }
 
-
-
-    /**
-     * @return array
-     */
     private function getUserArray($functionName = 'getUserArray')
     {
         $person = new Person();
@@ -420,5 +344,4 @@ class UserServiceTest extends Test
             'password' => $functionName
         ];
     }
-
 }
