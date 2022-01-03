@@ -1,5 +1,5 @@
 # user
-[![Build Status](https://travis-ci.org/delboy1978uk/user.png?branch=master)](https://travis-ci.org/delboy1978uk/user) [![Code Coverage](https://scrutinizer-ci.com/g/delboy1978uk/user/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/delboy1978uk/user/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/delboy1978uk/user/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/delboy1978uk/user/?branch=master) <br />
+![build status](https://github.com/delboy1978uk/user/actions/workflows/master.yml/badge.svg) [![Code Coverage](https://scrutinizer-ci.com/g/delboy1978uk/user/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/delboy1978uk/user/?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/delboy1978uk/user/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/delboy1978uk/user/?branch=master) <br />
 A persistable User object and service for use with Doctrine.
 ## installation
 Install via composer into your project:
