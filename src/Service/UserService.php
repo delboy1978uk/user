@@ -90,7 +90,7 @@ class UserService
         $criteria->setId($id);
         $results = $this->getUserRepository()->findByCriteria($criteria);
 
-        return (count($results)) ? $results[0] : null;
+        return $results && count($results) ? $results[0] : null;
     }
 
     /**
@@ -102,7 +102,7 @@ class UserService
         $criteria = new UserCriteria();
         $criteria->setEmail($email);
         $result = $this->getUserRepository()->findByCriteria($criteria);
-        return count($result) ? $result[0] : null;
+        return $result && count($result) ? $result[0] : null;
     }
 
     protected function getUserRepository(): UserRepository
