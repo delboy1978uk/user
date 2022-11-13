@@ -142,30 +142,70 @@ class UserService
         if (!isset($data['email']) || !isset($data['password']) || !isset($data['confirm'])) {
             throw new InvalidArgumentException('Required fields missing', 400);
         }
+
         if ($data['password'] !== $data['confirm']) {
             throw new UserException(UserException::WRONG_PASSWORD);
         }
 
-        $criteria = new UserCriteria();
-        $criteria->setEmail($data['email']);
-        $user = $this->getUserRepository()->findByCriteria($criteria);
+        $email = $data['email'];
+        $password = $data['password'];
+        $this->duplicateUserCheck($email);
 
-        if(!empty($user)) {
-            throw new UserException(UserException::USER_EXISTS);
+        return $this->createUser($email, $password);
+    }
+
+    /**
+     * @param string $email
+     * @return void
+     * @throws UserException
+     */
+    private function duplicateUserCheck(string $email): void
+    {
+        if($this->findUserByEmail($email)) {
+            throw new UserException(UserException::USER_EXISTS, 400);
         }
+    }
 
+    /**
+     * this creates a new user from an email
+     * @param string $email
+     * @return UserInterface
+     */
+    public function registerNewUserWithoutPassword(string $email): UserInterface
+    {
+        $this->duplicateUserCheck($email);
+        $password = $this->createRandomPassword();
+
+        return  $this->createUser($email, $password);
+    }
+
+    /**
+     * @return string
+     */
+    private function createRandomPassword(): string
+    {
+        return \openssl_random_pseudo_bytes(12);
+    }
+
+    /**
+     * @param string $email
+     * @param string $password
+     * @return UserInterface
+     */
+    private function createUser(string $email, string $password): UserInterface
+    {
         $person = new Person();
         /** @var UserInterface $user */
         $user = new $this->userClass();
         $state = new State(State::STATE_UNACTIVATED);
         $user->setPerson($person);
-        $user->setEmail($data['email']);
+        $user->setEmail($email);
         $user->setRegistrationDate(new DateTime());
         $user->setState($state);
 
         $bcrypt = new Bcrypt();
         $bcrypt->setCost(14);
-        $encryptedPassword = $bcrypt->create($data['password']);
+        $encryptedPassword = $bcrypt->create($password);
         $user->setPassword($encryptedPassword);
         $this->saveUser($user);
 
