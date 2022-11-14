@@ -170,6 +170,7 @@ class UserService
      * this creates a new user from an email
      * @param string $email
      * @return UserInterface
+     * @throws UserException
      */
     public function registerNewUserWithoutPassword(string $email): UserInterface
     {
