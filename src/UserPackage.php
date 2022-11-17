@@ -19,17 +19,15 @@ class UserPackage implements RegistrationInterface, EntityRegistrationInterface,
      */
     public function addToContainer(Container $c): void
     {
-        $personPackage = new PersonPackage();
-        $personPackage->addToContainer($c);
+        if (!$c->has(PersonService::class)) {
+            $personPackage = new PersonPackage();
+            $personPackage->addToContainer($c);
+        }
 
-        $function = function (Container $c) {
-            $entityManager = $c->get(EntityManager::class);
-            $personService = $c->get(PersonService::class);
-
-            return new UserService($entityManager, $personService);
-        };
-
-        $c[UserService::class] = $c->factory($function);
+        $entityManager = $c->get(EntityManager::class);
+        $personService = $c->get(PersonService::class);
+        $userService = new UserService($entityManager, $personService);
+        $c[UserService::class] = $userService;
     }
 
     /**
