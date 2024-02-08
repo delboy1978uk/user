@@ -16,6 +16,8 @@ class User extends ArrayCollection
 
         if($key) {
             $this->offsetSet($key,$user);
+
+            return;
         }
 
         throw new LogicException('User was not in the collection.');

@@ -72,6 +72,7 @@ class UserCollectionTest extends Test
     public function testUpdate()
     {
         $collection = new Users();
+
         $user = new User();
         $user->setId(1);
         $collection->append($user);
