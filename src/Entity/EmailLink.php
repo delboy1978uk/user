@@ -16,13 +16,13 @@ class EmailLink
     private $id;
 
     #[ORM\ManyToOne(targetEntity: 'Del\Entity\User', cascade: ['persist'])]
-    private $user;
+    private User $user;
 
     #[ORM\Column(type: 'datetime')]
-    private $expiryDate;
+    private DateTimeInterface $expiryDate;
 
     #[ORM\Column(type: 'string')]
-    private $token;
+    private string $token;
 
     public function getId(): int
     {

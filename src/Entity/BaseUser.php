@@ -15,25 +15,25 @@ class BaseUser implements UserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private int $id;
 
     #[ORM\Column(type: 'string', length: 50)]
-    private $email;
+    private string $email;
 
     #[ORM\OneToOne(targetEntity: 'Del\Person\Entity\Person',cascade: ['persist'])]
-    private $person;
+    private Person $person;
 
     #[ORM\Column(type: 'string', length: 100)]
-    private $password;
+    private string $password;
 
     #[ORM\Column(type: 'integer', length: 1)]
     private int $state;
 
     #[ORM\Column(type: 'datetime', nullable:true)]
-    private ?DateTime $registrationDate = null;
+    private ?DateTimeInterface $registrationDate = null;
 
     #[ORM\Column(type: 'datetime', nullable:  true)]
-    private ?DateTime $lastLoginDate = null;
+    private ?DateTimeInterface $lastLoginDate = null;
 
     public function __construct()
     {
