@@ -9,67 +9,53 @@ use Doctrine\ORM\QueryBuilder;
 
 class UserRepository extends EntityRepository
 {
-    /** @var QueryBuilder $qb */
-    private $qb;
+    private QueryBuilder $qb;
 
-    /**
-     * @param UserInterface $user
-     * @return UserInterface
-     * @throws \Exception
-     */
-    public function save(UserInterface $user)
+    public function save(UserInterface $user): UserInterface
     {
         if(!$user->getID()) {
             $this->_em->persist($user);
         }
         $this->_em->flush($user);
         $this->_em->flush($user->getPerson());
+
         return $user;
     }
 
-    /**
-     * @param UserInterface $user
-     * @param bool $deletePerson
-     * @throws \Exception
-     */
-    public function delete(UserInterface $user, $deletePerson = false)
+    public function delete(UserInterface $user, $deletePerson = false): void
     {
         if($deletePerson) {
             $this->_em->remove($user->getPerson());
         }
+
         $this->_em->remove($user);
         $this->_em->flush($user);
     }
 
-    /**
-     * @param UserCriteria $criteria
-     * @return UserCriteria
-     */
-    private function checkCriteriaForId(UserCriteria $criteria)
+
+    private function checkCriteriaForId(UserCriteria $criteria):  UserCriteria
     {
         if($criteria->hasId()) {
             $this->qb->where('u.id = :id');
             $this->qb->setParameter('id', $criteria->getId());
             $criteria->setLimit(1);
         }
+
         return $criteria;
     }
 
-    /**
-     * @param UserCriteria $criteria
-     * @return UserCriteria
-     */
-    private function checkCriteriaForEmail(UserCriteria $criteria)
+    private function checkCriteriaForEmail(UserCriteria $criteria): UserCriteria
     {
         if($criteria->hasEmail()) {
             $this->qb->where('u.email = :email');
             $this->qb->setParameter('email', $criteria->getEmail());
             $criteria->setLimit(1);
         }
+
         return $criteria;
     }
 
-    private function checkCriteriaForState(UserCriteria $criteria)
+    private function checkCriteriaForState(UserCriteria $criteria): void
     {
         if($criteria->hasState()) {
             $this->qb->andWhere('u.state = :state');
@@ -77,7 +63,7 @@ class UserRepository extends EntityRepository
         }
     }
 
-    private function checkCriteriaForRegistrationDate(UserCriteria $criteria)
+    private function checkCriteriaForRegistrationDate(UserCriteria $criteria): void
     {
         if($criteria->hasRegistrationDate()) {
             $this->qb->andWhere('u.registrationDate = :regdate');
@@ -85,7 +71,7 @@ class UserRepository extends EntityRepository
         }
     }
 
-    private function checkCriteriaForLastLoginDate(UserCriteria $criteria)
+    private function checkCriteriaForLastLoginDate(UserCriteria $criteria): void
     {
         if($criteria->hasLastLoginDate()) {
             $this->qb->andWhere('u.lastLoginDate = :lastlogin');
@@ -93,11 +79,7 @@ class UserRepository extends EntityRepository
         }
     }
 
-    /**
-     * @param UserCriteria $criteria
-     * @return array
-     */
-    public function findByCriteria(UserCriteria $criteria)
+    public function findByCriteria(UserCriteria $criteria): array
     {
         $this->qb = $this->createQueryBuilder('u');
 

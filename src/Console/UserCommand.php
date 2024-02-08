@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Del\Console;
 
 use DateTime;
@@ -14,23 +16,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class UserCommand extends Command
 {
-    /** @var UserService $userService */
-    private $userService;
-
-    /**
-     * UserCommand constructor.
-     * @throws \Doctrine\ORM\ORMException
-     */
-    public function __construct(UserService $userService)
-    {
+    public function __construct(
+        private UserService $userService
+    ) {
         parent::__construct();
-        $this->userService = $userService;
     }
 
-    /**
-     *
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('user:reset-pass')
@@ -47,13 +39,7 @@ class UserCommand extends Command
         ;
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int|void|null
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $email = $input->getArgument('email');
         $pass = $input->getArgument('newPassword');

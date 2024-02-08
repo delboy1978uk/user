@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Del;
 
 use Barnacle\EntityRegistrationInterface;
@@ -14,9 +16,6 @@ use Doctrine\ORM\EntityManager;
 
 class UserPackage implements RegistrationInterface, EntityRegistrationInterface, CommandRegistrationInterface
 {
-    /**
-     * @param Container $c
-     */
     public function addToContainer(Container $c): void
     {
         if (!$c->has(PersonService::class)) {
@@ -30,18 +29,11 @@ class UserPackage implements RegistrationInterface, EntityRegistrationInterface,
         $c[UserService::class] = $userService;
     }
 
-    /**
-     * @return string
-     */
     public function getEntityPath(): string
     {
         return 'vendor/delboy1978uk/user/src/Entity';
     }
 
-    /**
-     * @param Container $container
-     * @return array
-     */
     public function registerConsoleCommands(Container $container): array
     {
         $userService = $container->get(UserService::class);
