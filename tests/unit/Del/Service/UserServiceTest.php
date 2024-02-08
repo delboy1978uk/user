@@ -180,7 +180,7 @@ class UserServiceTest extends Test
 
     public function testRegisterUser()
     {
-        $this->userRepo->method('findByCriteria')->willReturn(null);
+        $this->userRepo->method('findByCriteria')->willReturn([]);
         $form = [
             'email' => 'pass@test.com',
             'password' => '123456',

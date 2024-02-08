@@ -181,8 +181,8 @@ class UserService
     public function generateEmailLink(UserInterface $user, int $expiry_days = 7): EmailLink
     {
         $date = new DateTime();
-        $date->modify('+'.$expiry_days.' days');
-        $token = md5(uniqid(rand(), true));
+        $date->modify('+' . $expiry_days . ' days');
+        $token = md5(uniqid((string) rand(), true));
         $link = new EmailLink();
         $link->setUser($user);
         $link->setToken($token);
@@ -280,8 +280,14 @@ class UserService
         $this->userClass = $fullyQualifiedClassName;
     }
 
+    public function getPersonService(): PersonService
+    {
+        return $this->personService;
+    }
+
+    /** @deprecated use getPersonService() instead  */
     public function getPersonSvc(): PersonService
     {
-        return $this->personSvc;
+        return $this->personService;
     }
 }

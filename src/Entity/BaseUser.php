@@ -15,7 +15,7 @@ class BaseUser implements UserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private int $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 50)]
     private string $email;
@@ -37,7 +37,7 @@ class BaseUser implements UserInterface
 
     public function __construct()
     {
-        $this->state = 0;
+        $this->state = State::STATE_UNACTIVATED;
     }
 
     public function getId(): ?int
