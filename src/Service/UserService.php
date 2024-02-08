@@ -23,7 +23,6 @@ use Laminas\Crypt\Password\Bcrypt;
 class UserService
 {
     private string $userClass;
-
     private UserRepository $userRepository;
 
     public function __construct(
@@ -88,7 +87,7 @@ class UserService
     protected function getUserRepository(): UserRepository
     {
         if (!isset($this->userRepository)) {
-            $this->userRepository = $this->em->getRepository($this->userClass);
+            $this->userRepository = $this->entityManager->getRepository($this->userClass);
         }
 
         return $this->userRepository;
@@ -96,7 +95,7 @@ class UserService
 
     private function getEmailLinkRepository(): EmailLinkRepository
     {
-        return $this->em->getRepository(EmailLink::class);
+        return $this->entityManager->getRepository(EmailLink::class);
     }
 
     public function hasProfile(UserInterface $user): bool
@@ -159,7 +158,6 @@ class UserService
         $user->setEmail($email);
         $user->setRegistrationDate(new DateTime());
         $user->setState($state);
-
         $bcrypt = new Bcrypt();
         $bcrypt->setCost(14);
         $encryptedPassword = $bcrypt->create($password);
@@ -173,7 +171,6 @@ class UserService
     {
         $bcrypt = new Bcrypt();
         $bcrypt->setCost(14);
-
         $encryptedPassword = $bcrypt->create($password);
         $user->setPassword($encryptedPassword);
         $this->saveUser($user);
@@ -197,7 +194,7 @@ class UserService
     public function deleteEmailLink(EmailLink $link): void
     {
         /** @var EmailLink $link */
-        $link = $this->em->merge($link);
+        $link = $this->entityManager->merge($link);
         $this->getEmailLinkRepository()->delete($link);
     }
 
@@ -209,15 +206,19 @@ class UserService
     public function findEmailLink(string $email, string $token): EmailLink
     {
         $link = $this->getEmailLinkRepository()->findByToken($token);
+
         if(!$link) {
             throw new EmailLinkException(EmailLinkException::LINK_NOT_FOUND);
         }
+
         if($link->getUser()->getEmail() != $email) {
             throw new EmailLinkException(EmailLinkException::LINK_NO_MATCH);
         }
+
         if($link->getExpiryDate() < new DateTime()) {
             throw new EmailLinkException(EmailLinkException::LINK_EXPIRED);
         }
+
         return $link;
     }
 
@@ -225,7 +226,6 @@ class UserService
     {
         $criteria = new UserCriteria();
         $criteria->setEmail($email);
-
         $user = $this->getUserRepository()->findByCriteria($criteria);
 
         if(empty($user)) {
@@ -248,8 +248,7 @@ class UserService
         $bcrypt = new Bcrypt();
         $bcrypt->setCost(14);
 
-        if(!$bcrypt->verify($password, $user->getPassword()))
-        {
+        if(!$bcrypt->verify($password, $user->getPassword())) {
             throw new UserException(UserException::WRONG_PASSWORD);
         }
 
