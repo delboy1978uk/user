@@ -2,7 +2,7 @@
 
 namespace DelTesting\Service;
 
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use DateTime;
 use Del\Entity\UserInterface;
 use Del\Person\Entity\Person;
@@ -19,7 +19,7 @@ use Del\Value\User\State;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class UserServiceTest extends Test
+class UserServiceTest extends Unit
 {
     private MockObject $userRepo;
     private MockObject $emailLinkRepo;

@@ -3,7 +3,7 @@
 namespace DelTesting\Console;
 
 use Barnacle\Container;
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use DateTime;
 use Del\Common\ContainerService;
 use Del\Console\UserCommand;
@@ -23,7 +23,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class UserCommandTest extends Test
+class UserCommandTest extends Unit
 {
     private MockObject $personRepository;
     private MockObject $userRepository;
