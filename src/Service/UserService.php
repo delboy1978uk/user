@@ -193,8 +193,6 @@ class UserService
 
     public function deleteEmailLink(EmailLink $link): void
     {
-        /** @var EmailLink $link */
-        $link = $this->entityManager->merge($link);
         $this->getEmailLinkRepository()->delete($link);
     }
 
