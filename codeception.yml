@@ -1,7 +1,7 @@
-actor: Tester
+actor_suffix: Tester
 paths:
     tests: tests
-    log: tests/_output
+    output: tests/_output
     data: tests/_data
     helpers: tests/_support
 settings:
@@ -17,5 +17,7 @@ modules:
             dump: tests/_data/dump.sql
 coverage:
     enabled: true
-    include:
-        - src/*
+    whitelist:
+        include:
+            - src/*.php
+

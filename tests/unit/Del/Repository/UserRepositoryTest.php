@@ -2,10 +2,10 @@
 
 namespace Del\Repository;
 
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use Del\Common\ContainerService;
 
-class UserRepositoryTest extends Test
+class UserRepositoryTest extends Unit
 {
    /**
     * @var \UnitTester

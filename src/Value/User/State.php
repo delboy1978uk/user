@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Del\Value\User;
 
 use InvalidArgumentException;
@@ -12,22 +14,25 @@ class State
     const STATE_SUSPENDED = 3;
     const STATE_BANNED = 4;
 
-    private $value;
+    const VALID_STATES = [
+        self::STATE_ACTIVATED,
+        self::STATE_BANNED,
+        self::STATE_DISABLED,
+        self::STATE_SUSPENDED,
+        self::STATE_UNACTIVATED,
+    ];
 
-    /**
-     * @param $val
-     */
+    private int $value;
+
     public function __construct(int $val)
     {
-        if(!in_array($val, [self::STATE_UNACTIVATED, self::STATE_ACTIVATED, self::STATE_DISABLED, self::STATE_SUSPENDED, self::STATE_BANNED])) {
+        if(!in_array($val, self::VALID_STATES)) {
             throw new InvalidArgumentException('Value is invalid');
         }
+
         $this->value = $val;
     }
 
-    /**
-     * @return int
-     */
     public function getValue(): int
     {
         return $this->value;

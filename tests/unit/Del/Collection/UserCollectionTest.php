@@ -2,11 +2,11 @@
 
 namespace Del\Repository;
 
-use Codeception\TestCase\Test;
+use Codeception\Test\Unit;
 use Del\Collection\User as Users;
 use Del\Entity\User;
 
-class UserCollectionTest extends Test
+class UserCollectionTest extends Unit
 {
    /**
     * @var \UnitTester
@@ -72,6 +72,7 @@ class UserCollectionTest extends Test
     public function testUpdate()
     {
         $collection = new Users();
+
         $user = new User();
         $user->setId(1);
         $collection->append($user);

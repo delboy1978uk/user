@@ -1,99 +1,64 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Del\Entity;
 
-use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="Del\Repository\EmailLink")
- */
+#[ORM\Entity(repositoryClass: 'Del\Repository\EmailLink')]
 class EmailLink
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', length: 11)]
     private $id;
 
-    /**
-     *  @ORM\ManyToOne(targetEntity="Del\Entity\User",cascade={"persist"})
-     */
-    private $user;
+    #[ORM\ManyToOne(targetEntity: 'Del\Entity\User', cascade: ['persist'])]
+    private User $user;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $expiry_date;
+    #[ORM\Column(type: 'datetime')]
+    private DateTimeInterface $expiryDate;
 
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $token;
+    #[ORM\Column(type: 'string')]
+    private string $token;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
     public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return UserInterface
-     */
     public function getUser(): UserInterface
     {
         return $this->user;
     }
 
-    /**
-     * @param UserInterface $user
-     * @return EmailLink
-     */
     public function setUser(UserInterface $user): void
     {
         $this->user = $user;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getExpiryDate(): DateTime
+    public function getExpiryDate(): DateTimeInterface
     {
-        return $this->expiry_date;
+        return $this->expiryDate;
     }
 
-    /**
-     * @param DateTime $expiry_date
-     * @return EmailLink
-     */
-    public function setExpiryDate(DateTime $expiry_date): void
+    public function setExpiryDate(DateTimeInterface $expiry_date): void
     {
-        $this->expiry_date = $expiry_date;
+        $this->expiryDate = $expiry_date;
     }
 
-    /**
-     * @return string
-     */
     public function getToken(): string
     {
         return $this->token;
     }
 
-    /**
-     * @param string $token
-     * @return EmailLink
-     */
     public function setToken(string $token):  void
     {
         $this->token = $token;

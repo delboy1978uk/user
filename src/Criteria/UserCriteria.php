@@ -1,259 +1,166 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Del\Criteria;
 
 class UserCriteria
 {
     const ORDER_ASC = 'ASC';
     const ORDER_DESC = 'DESC';
-
     const ORDER_ID = 'id';
     const ORDER_EMAIL = 'email';
     const ORDER_STATE  = 'state';
     const ORDER_REG_DATE = 'registrationDate';
     const ORDER_LAST_LOGIN_DATE = 'lastLoginDate';
 
-    protected $id;
-    protected $email;
-    protected $state;
-    protected $registrationDate;
-    protected $lastLoginDate;
+    protected ?int $id = null;
+    protected ?string $email = null;
+    protected ?int $state = null;
+    protected ?string $registrationDate = null;
+    protected ?string $lastLoginDate = null;
+    protected ?int $limit = null;
+    protected ?int $offset = null;
+    protected ?string $order = null;
+    protected ?string $orderDirection = null;
 
-    protected $limit;
-    protected $offset;
-    protected $order;
-    protected $orderDirection;
-
-    /**
-     * @return bool
-     */
-    public function hasOffset()
+    public function hasOffset(): bool
     {
         return $this->offset !== null;
     }
 
-    /**
-     * @param $code
-     * @return $this
-     */
-    public function setOffset($code)
+    public function setOffset(int $offset):  void
     {
-        $this->offset = $code;
-        return $this;
+        $this->offset = $offset;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOffset()
+    public function getOffset(): int
     {
         return $this->offset;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasLimit()
+    public function hasLimit(): bool
     {
         return $this->limit !== null;
     }
 
-    /**
-     * @param $code
-     * @return $this
-     */
-    public function setLimit($code)
+    public function setLimit(int $limit): void
     {
-        $this->limit = $code;
-        return $this;
+        $this->limit = $limit;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLimit()
+    public function getLimit(): ?int
     {
         return $this->limit;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasOrder()
+    public function hasOrder(): bool
     {
         return $this->order !== null;
     }
 
-    /**
-     * @param $code
-     * @return $this
-     */
-    public function setOrder($order)
+    public function setOrder(string $order): void
     {
         $this->order = $order;
-        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOrder()
+    public function getOrder(): ?string
     {
         return $this->order;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOrderDirection()
+    public function getOrderDirection(): ?string
     {
         return $this->orderDirection;
     }
 
-    /**
-     * @param mixed $orderDirection
-     * @return Criteria
-     */
-    public function setOrderDirection($orderDirection)
+    public function setOrderDirection(string $orderDirection): void
     {
         $this->orderDirection = $orderDirection;
-        return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasOrderDirection()
+    public function hasOrderDirection(): bool
     {
         return $this->orderDirection !== null;
     }
 
-    /**
-     * @param $page
-     * @param $limit
-     */
-    public function setPagination($page, $limit)
+    public function setPagination(int  $page, int $limit): void
     {
         $offset = ($limit * $page) - $limit;
         $this->setLimit($limit);
         $this->setOffset($offset);
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param $id
-     */
     public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return bool
-     */
     public function hasId(): bool
     {
         return $this->id != null;
     }
 
-    /**
-     * @return mixed
-     */
     public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     */
     public function setEmail($email): void
     {
         $this->email = $email;
     }
 
-    /**
-     * @return bool
-     */
     public function hasEmail(): bool
     {
         return $this->email != null;
     }
 
-    /**
-     * @return int
-     */
     public function getState(): int
     {
         return $this->state;
     }
 
-    /**
-     * @param mixed $state
-     */
     public function setState(int $state): void
     {
         $this->state = $state;
     }
 
-    /**
-     * @return bool
-     */
     public function hasState(): bool
     {
         return $this->state != null;
     }
 
-    /**
-     * @return string
-     */
     public function getRegistrationDate(): string
     {
         return $this->registrationDate;
     }
 
-    /**
-     * @param string $registrationDate
-     */
     public function setRegistrationDate(string $registrationDate): void
     {
         $this->registrationDate = $registrationDate;
     }
 
-    /**
-     * @return bool
-     */
     public function hasRegistrationDate(): bool
     {
         return $this->registrationDate != null;
     }
 
-    /**
-     * @return string
-     */
     public function getLastLoginDate(): string
     {
         return $this->lastLoginDate;
     }
 
-    /**
-     * @param string $lastLoginDate
-     */
     public function setLastLoginDate(string $lastLoginDate): void
     {
         $this->lastLoginDate = $lastLoginDate;
     }
 
-    /**
-     * @return bool
-     */
     public function hasLastLoginDate(): bool
     {
         return $this->lastLoginDate != null;

@@ -6,7 +6,7 @@ use DateTime;
 use Del\Person\Entity\Person;
 use Del\Value\User\State;
 
-class UserTest extends \Codeception\TestCase\Test
+class UserTest extends \Codeception\Test\Unit
 {
    /**
     * @var \UnitTester

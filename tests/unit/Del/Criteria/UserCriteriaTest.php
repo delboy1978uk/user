@@ -5,7 +5,7 @@ namespace DelTesting\Criteria;
 use DateTime;
 use Del\Criteria\UserCriteria;
 
-class UserCriteriaTest extends \Codeception\TestCase\Test
+class UserCriteriaTest extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitTester

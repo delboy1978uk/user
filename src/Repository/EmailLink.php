@@ -7,33 +7,21 @@ use Doctrine\ORM\EntityRepository;
 
 class EmailLink extends EntityRepository
 {
-    /**
-     * @param EmailLinkEntity $link
-     * @return EmailLinkEntity
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function save(EmailLinkEntity $link)
+    public function save(EmailLinkEntity $link):  EmailLinkEntity
     {
         $this->_em->persist($link);
         $this->_em->flush();
+
         return $link;
     }
 
-    /**
-     * @param EmailLinkEntity $link
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function delete(EmailLinkEntity $link)
+    public function delete(EmailLinkEntity $link): void
     {
         $this->_em->remove($link);
         $this->_em->flush();
     }
 
-    /**
-     * @param string $token
-     * @return EmailLinkEntity|null
-     */
-    public function findByToken($token)
+    public function findByToken(string $token): ?EmailLinkEntity
     {
         $qb = $this->createQueryBuilder('el');
 
@@ -42,6 +30,7 @@ class EmailLink extends EntityRepository
 
         $query = $qb->getQuery();
         $result = $query->getResult();
+
         return count($result) ? $result[0] : null;
     }
 }

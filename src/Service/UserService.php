@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Del\Service;
 
 use DateTime;
@@ -20,24 +22,16 @@ use Laminas\Crypt\Password\Bcrypt;
 
 class UserService
 {
-    protected EntityManager $em;
-    private PersonService $personSvc;
     private string $userClass;
-
     private UserRepository $userRepository;
 
-    public function __construct(EntityManager $entityManager,  PersonService $personService)
-    {
-        $this->em = $entityManager;
-        $this->personSvc = $personService;
+    public function __construct(
+        protected EntityManager $entityManager,
+        private  PersonService $personService
+    ) {
         $this->setUserClass(User::class);
     }
 
-    /**
-     * @param array $data
-     * @return UserInterface
-     * @throws \Exception
-     */
     public function createFromArray(array $data): UserInterface
     {
         /** @var UserInterface $user */
@@ -54,9 +48,6 @@ class UserService
         return $user;
     }
 
-    /**
-     * @return array
-     */
     public function toArray(UserInterface $user): array
     {
         return [
@@ -70,20 +61,11 @@ class UserService
         ];
     }
 
-    /**
-     * @param UserInterface $user
-     * @return UserInterface
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
     public function saveUser(UserInterface $user): UserInterface
     {
         return $this->getUserRepository()->save($user);
     }
 
-    /**
-     * @param int $id
-     * @return UserInterface|null
-     */
     public function findUserById(int $id): ?UserInterface
     {
         $criteria = new UserCriteria();
@@ -93,22 +75,19 @@ class UserService
         return $results && count($results) ? $results[0] : null;
     }
 
-    /**
-     * @param string $email
-     * @return UserInterface|null
-     */
     public function findUserByEmail(string $email): ?UserInterface
     {
         $criteria = new UserCriteria();
         $criteria->setEmail($email);
         $result = $this->getUserRepository()->findByCriteria($criteria);
+
         return $result && count($result) ? $result[0] : null;
     }
 
     protected function getUserRepository(): UserRepository
     {
         if (!isset($this->userRepository)) {
-            $this->userRepository = $this->em->getRepository($this->userClass);
+            $this->userRepository = $this->entityManager->getRepository($this->userClass);
         }
 
         return $this->userRepository;
@@ -116,7 +95,7 @@ class UserService
 
     private function getEmailLinkRepository(): EmailLinkRepository
     {
-        return $this->em->getRepository(EmailLink::class);
+        return $this->entityManager->getRepository(EmailLink::class);
     }
 
     public function hasProfile(UserInterface $user): bool
@@ -131,12 +110,6 @@ class UserService
         return $has;
     }
 
-    /**
-     * @param array $data
-     * @return UserInterface
-     * @throws UserException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
     public function registerUser(array $data): UserInterface
     {
         if (!isset($data['email']) || !isset($data['password']) || !isset($data['confirm'])) {
@@ -154,11 +127,6 @@ class UserService
         return $this->createUser($email, $password);
     }
 
-    /**
-     * @param string $email
-     * @return void
-     * @throws UserException
-     */
     private function duplicateUserCheck(string $email): void
     {
         if($this->findUserByEmail($email)) {
@@ -166,12 +134,7 @@ class UserService
         }
     }
 
-    /**
-     * this creates a new user from an email
-     * @param string $email
-     * @return UserInterface
-     * @throws UserException
-     */
+    /** this creates a new user from an email */
     public function registerNewUserWithoutPassword(string $email): UserInterface
     {
         $this->duplicateUserCheck($email);
@@ -180,19 +143,11 @@ class UserService
         return  $this->createUser($email, $password);
     }
 
-    /**
-     * @return string
-     */
     private function createRandomPassword(): string
     {
         return \openssl_random_pseudo_bytes(12);
     }
 
-    /**
-     * @param string $email
-     * @param string $password
-     * @return UserInterface
-     */
     private function createUser(string $email, string $password): UserInterface
     {
         $person = new Person();
@@ -203,7 +158,6 @@ class UserService
         $user->setEmail($email);
         $user->setRegistrationDate(new DateTime());
         $user->setState($state);
-
         $bcrypt = new Bcrypt();
         $bcrypt->setCost(14);
         $encryptedPassword = $bcrypt->create($password);
@@ -213,17 +167,10 @@ class UserService
         return $user;
     }
 
-    /**
-     * @param UserInterface $user
-     * @param $password
-     * @return UserInterface
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
     public function changePassword(UserInterface $user, string $password): UserInterface
     {
         $bcrypt = new Bcrypt();
         $bcrypt->setCost(14);
-
         $encryptedPassword = $bcrypt->create($password);
         $user->setPassword($encryptedPassword);
         $this->saveUser($user);
@@ -231,17 +178,11 @@ class UserService
         return $user;
     }
 
-    /**
-     * @param UserInterface $user
-     * @param int $expiry_days
-     * @return EmailLink
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
     public function generateEmailLink(UserInterface $user, int $expiry_days = 7): EmailLink
     {
         $date = new DateTime();
-        $date->modify('+'.$expiry_days.' days');
-        $token = md5(uniqid(rand(), true));
+        $date->modify('+' . $expiry_days . ' days');
+        $token = md5(uniqid((string) rand(), true));
         $link = new EmailLink();
         $link->setUser($user);
         $link->setToken($token);
@@ -250,59 +191,39 @@ class UserService
         return $this->getEmailLinkRepository()->save($link);
     }
 
-    /**
-     * @param EmailLink $link
-     * @throws \Doctrine\ORM\ORMException
-     */
     public function deleteEmailLink(EmailLink $link): void
     {
-        /** @var EmailLink $link */
-        $link = $this->em->merge($link);
         $this->getEmailLinkRepository()->delete($link);
     }
 
-    /**
-     * @param UserInterface $user
-     * @param bool $deletePerson
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
     public function deleteUser(UserInterface $user, bool $deletePerson = false):  void
     {
         $this->getUserRepository()->delete($user,$deletePerson);
     }
 
-    /**
-     * @param string $email
-     * @param string $token
-     * @return EmailLink
-     * @throws EmailLinkException
-     */
     public function findEmailLink(string $email, string $token): EmailLink
     {
         $link = $this->getEmailLinkRepository()->findByToken($token);
+
         if(!$link) {
             throw new EmailLinkException(EmailLinkException::LINK_NOT_FOUND);
         }
+
         if($link->getUser()->getEmail() != $email) {
             throw new EmailLinkException(EmailLinkException::LINK_NO_MATCH);
         }
+
         if($link->getExpiryDate() < new DateTime()) {
             throw new EmailLinkException(EmailLinkException::LINK_EXPIRED);
         }
+
         return $link;
     }
 
-    /**
-     * @param string $email
-     * @param string $password
-     * @return int
-     * @throws UserException
-     */
     public function authenticate(string $email, string $password): int
     {
         $criteria = new UserCriteria();
         $criteria->setEmail($email);
-
         $user = $this->getUserRepository()->findByCriteria($criteria);
 
         if(empty($user)) {
@@ -325,27 +246,18 @@ class UserService
         $bcrypt = new Bcrypt();
         $bcrypt->setCost(14);
 
-        if(!$bcrypt->verify($password, $user->getPassword()))
-        {
+        if(!$bcrypt->verify($password, $user->getPassword())) {
             throw new UserException(UserException::WRONG_PASSWORD);
         }
 
         return $user->getID();
     }
 
-    /**
-     * @param UserCriteria $criteria
-     * @return array
-     */
     public function findByCriteria(UserCriteria $criteria): array
     {
         return $this->getUserRepository()->findByCriteria($criteria);
     }
 
-    /**
-     * @param UserCriteria $criteria
-     * @return UserInterface|null
-     */
     public function findOneByCriteria(UserCriteria $criteria): ?UserInterface
     {
         $results = $this->getUserRepository()->findByCriteria($criteria);
@@ -353,11 +265,6 @@ class UserService
         return count($results) > 0 ? $results[0] : null;
     }
 
-    /**
-     * @param UserInterface $user
-     * @param $password
-     * @return bool
-     */
     public function checkPassword(UserInterface $user, string $password): bool
     {
         $bcrypt = new Bcrypt();
@@ -366,19 +273,19 @@ class UserService
         return $bcrypt->verify($password, $user->getPassword());
     }
 
-    /**
-     * @param string $fullyQualifiedClassName
-     */
     public function setUserClass(string $fullyQualifiedClassName): void
     {
         $this->userClass = $fullyQualifiedClassName;
     }
 
-    /**
-     * @return PersonService
-     */
+    public function getPersonService(): PersonService
+    {
+        return $this->personService;
+    }
+
+    /** @deprecated use getPersonService() instead  */
     public function getPersonSvc(): PersonService
     {
-        return $this->personSvc;
+        return $this->personService;
     }
 }
