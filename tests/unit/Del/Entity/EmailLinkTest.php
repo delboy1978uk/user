@@ -6,7 +6,7 @@ use DateTime;
 use Del\Entity\EmailLink;
 use Del\Entity\User;
 
-class UserTest extends \Codeception\TestCase\Test
+class UserTest extends \Codeception\Test\Unit
 {
     /**
      * @var \UnitTester
