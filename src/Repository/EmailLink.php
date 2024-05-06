@@ -9,16 +9,16 @@ class EmailLink extends EntityRepository
 {
     public function save(EmailLinkEntity $link):  EmailLinkEntity
     {
-        $this->_em->persist($link);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($link);
+        $this->getEntityManager()->flush();
 
         return $link;
     }
 
     public function delete(EmailLinkEntity $link): void
     {
-        $this->_em->remove($link);
-        $this->_em->flush();
+        $this->getEntityManager()->remove($link);
+        $this->getEntityManager()->flush();
     }
 
     public function findByToken(string $token): ?EmailLinkEntity

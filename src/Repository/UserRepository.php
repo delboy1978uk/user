@@ -14,10 +14,9 @@ class UserRepository extends EntityRepository
     public function save(UserInterface $user): UserInterface
     {
         if(!$user->getID()) {
-            $this->_em->persist($user);
+            $this->getEntityManager()->persist($user);
         }
-        $this->_em->flush($user);
-        $this->_em->flush($user->getPerson());
+        $this->getEntityManager()->flush();
 
         return $user;
     }
@@ -25,11 +24,11 @@ class UserRepository extends EntityRepository
     public function delete(UserInterface $user, $deletePerson = false): void
     {
         if($deletePerson) {
-            $this->_em->remove($user->getPerson());
+            $this->getEntityManager()->remove($user->getPerson());
         }
 
-        $this->_em->remove($user);
-        $this->_em->flush($user);
+        $this->getEntityManager()->remove($user);
+        $this->getEntityManager()->flush();
     }
 
 
