@@ -70,9 +70,9 @@ class UserCriteriaTest extends \Codeception\Test\Unit
     public function testGetSetHasOrder()
     {
         $this->assertFalse($this->criteria->hasOrder());
-        $this->criteria->setOrder(UserCriteria::ORDERgetEntityManager()AIL);
+        $this->criteria->setOrder(UserCriteria::ORDER_EMAIL);
         $this->assertTrue($this->criteria->hasOrder());
-        $this->assertEquals(UserCriteria::ORDERgetEntityManager()AIL, $this->criteria->getOrder());
+        $this->assertEquals(UserCriteria::ORDER_EMAIL, $this->criteria->getOrder());
     }
 
     public function testGetSetHasRegistrationDate()

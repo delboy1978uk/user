@@ -9,7 +9,7 @@ class UserCriteria
     const ORDER_ASC = 'ASC';
     const ORDER_DESC = 'DESC';
     const ORDER_ID = 'id';
-    const ORDERgetEntityManager()AIL = 'email';
+    const ORDER_EMAIL = 'email';
     const ORDER_STATE  = 'state';
     const ORDER_REG_DATE = 'registrationDate';
     const ORDER_LAST_LOGIN_DATE = 'lastLoginDate';
