@@ -23,7 +23,7 @@ jobs:
           php-version: ${{ matrix.php }}
 
       - name: Validate composer.json and composer.lock
-        run: composer validate --strict
+        run: composer validate --strict --no-plugins
 
       - name: Cache Composer packages
         id: composer-cache
@@ -35,13 +35,13 @@ jobs:
             ${{ runner.os }}-php-
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+        run: composer install --prefer-dist --no-progress --no-plugins
 
       - name: Run test suite with coverage
         run: XDEBUG_MODE=coverage vendor/bin/codecept run unit --coverage-xml
 
       - name: Download Scrutinizer ocular.phar
-        run: composer require scrutinizer/ocular -W
+        run: composer require scrutinizer/ocular -W --prefer-dist --no-progress --no-plugins
 
       - name: Upload coverage
         run: vendor/bin/ocular code-coverage:upload --format=php-clover tests/_output/coverage.xml

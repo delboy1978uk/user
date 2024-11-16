@@ -4,6 +4,7 @@ namespace Del\Entity;
 
 use DateTime;
 use Del\Person\Entity\Person;
+use Del\Traits\HasUser;
 use Del\Value\User\State;
 
 class UserTest extends \Codeception\Test\Unit
@@ -79,5 +80,15 @@ class UserTest extends \Codeception\Test\Unit
     {
         $this->expectException('InvalidArgumentException');
         $this->user->setState(new State(666));
+    }
+
+    public function testTrait()
+    {
+        $trait = new class() {
+            use HasUser;
+        };
+        $user = new User();
+        $trait->setUser($user);
+        $this->assertInstanceOf(User::class, $trait->getUser());
     }
 }
