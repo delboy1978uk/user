@@ -36,7 +36,7 @@ class TraitsTest extends Unit
         $class->setOwnedBy($user);
 
         self::assertInstanceOf(User::class, $class->getUser());
-        self::assertInstanceOf(User::class, $class->getDeletedAt());
+        self::assertInstanceOf(User::class, $class->getDeletedBy());
         self::assertInstanceOf(User::class, $class->getApprovedBy());
         self::assertInstanceOf(User::class, $class->getRejectedBy());
         self::assertInstanceOf(User::class, $class->getOwnedBy());
