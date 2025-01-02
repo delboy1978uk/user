@@ -2,22 +2,6 @@
 
 namespace Bone\Test\BoneDoctrine\Command;
 
-use Bone\App\Traits\HasUser;
-use Bone\BoneDoctrine\Traits\HasCreatedAtDate;
-use Bone\BoneDoctrine\Traits\HasDeletedAtDate;
-use Bone\BoneDoctrine\Traits\HasEmail;
-use Bone\BoneDoctrine\Traits\HasEntityManagerTrait;
-use Bone\BoneDoctrine\Traits\HasExpiryDate;
-use Bone\BoneDoctrine\Traits\HasId;
-use Bone\BoneDoctrine\Traits\HasImage;
-use Bone\BoneDoctrine\Traits\HasName;
-use Bone\BoneDoctrine\Traits\HasPrivacy;
-use Bone\BoneDoctrine\Traits\HasSettings;
-use Bone\BoneDoctrine\Traits\HasTelephone;
-use Bone\BoneDoctrine\Traits\HasUpdatedAtDate;
-use Bone\BoneDoctrine\Traits\HasURL;
-use Bone\BoneDoctrine\Traits\HasURLSlug;
-use Bone\BoneDoctrine\Traits\HasVisibility;
 use Codeception\Test\Unit;
 use DateTime;
 use Del\Entity\User;
@@ -25,6 +9,7 @@ use Del\Traits\HasApprovedBy;
 use Del\Traits\HasDeletedBy;
 use Del\Traits\HasOwnedBy;
 use Del\Traits\HasRejectedBy;
+use Del\Traits\HasUser;
 use Doctrine\ORM\EntityManagerInterface;
 
 class FakeClass
