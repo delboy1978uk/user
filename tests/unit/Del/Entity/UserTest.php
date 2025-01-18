@@ -78,6 +78,14 @@ class UserTest extends \Codeception\Test\Unit
 
     public function testToArray()
     {
+        $this->user->setId(100);
+        $person = new Person();
+        $person->setAka('Delboy');
+        $this->user->setPerson($person);
+        $this->user->setEmail('delboy1978uk@gmail.com');
+        $this->user->setState(new State(State::STATE_ACTIVATED));
+        $this->user->setRegistrationDate(new DateTime('1970-01-01'));
+        $this->user->setLastLogin(new DateTime('2015-01-12'));
         $data = $this->user->toArray();
         $this->assertArrayHasKey('id', $data);
         $this->assertArrayHasKey('email', $data);
