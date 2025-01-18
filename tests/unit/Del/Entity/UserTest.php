@@ -76,6 +76,17 @@ class UserTest extends \Codeception\Test\Unit
         $this->assertEquals(State::STATE_BANNED,$this->user->getState()->getValue());
     }
 
+    public function testToArray()
+    {
+        $data = $this->user->toArray();
+        $this->assertArrayHasKey('id', $data);
+        $this->assertArrayHasKey('email', $data);
+        $this->assertArrayHasKey('person', $data);
+        $this->assertArrayHasKey('state', $data);
+        $this->assertArrayHasKey('registrationDate', $data);
+        $this->assertArrayHasKey('lastLoginDate', $data);
+    }
+
     public function testStateValueObject()
     {
         $this->expectException('InvalidArgumentException');

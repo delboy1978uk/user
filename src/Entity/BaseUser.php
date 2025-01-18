@@ -20,7 +20,7 @@ class BaseUser implements UserInterface
     #[ORM\Column(type: 'string', length: 50)]
     private string $email;
 
-    #[ORM\OneToOne(targetEntity: 'Del\Person\Entity\Person',cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: 'Del\Person\Entity\Person', cascade: ['persist'])]
     private Person $person;
 
     #[ORM\Column(type: 'string', length: 100)]
@@ -29,10 +29,10 @@ class BaseUser implements UserInterface
     #[ORM\Column(type: 'integer', length: 1)]
     private int $state;
 
-    #[ORM\Column(type: 'datetime', nullable:true)]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private ?DateTimeInterface $registrationDate = null;
 
-    #[ORM\Column(type: 'datetime', nullable:  true)]
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private ?DateTimeInterface $lastLoginDate = null;
 
     public function __construct()
@@ -108,5 +108,17 @@ class BaseUser implements UserInterface
     public function setLastLogin(DateTimeInterface $lastLogin): void
     {
         $this->lastLoginDate = $lastLogin;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'email' => $this->email,
+            'person' => $this->person->toArray(),
+            'state' => $this->state,
+            'registrationDate' => $this->registrationDate,
+            'lastLoginDate' => $this->lastLoginDate,
+        ];
     }
 }
