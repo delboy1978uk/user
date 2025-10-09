@@ -45,7 +45,7 @@ class UserCommandTest extends Unit
         $package = new UserPackage();
         $package->addToContainer($container);
         $this->userService = $container[UserService::class];
-        $this->command = new UserCommand($this->userService);
+        $this->command = new ResetPasswordCommand($this->userService);
     }
 
     protected function _after()
@@ -84,7 +84,7 @@ class UserCommandTest extends Unit
         $user->setPerson($person);
         $user->setState(new State(State::STATE_ACTIVATED));
         $user = $userSvc->changePassword($user, 'changeme'); // This saves the user too
-        $command = new UserCommand($userSvc);
+        $command = new ResetPasswordCommand($userSvc);
         $output = $this->runCommand($command,[
             'email' => 'test@123.com',
             'newPassword' => 'testPass!'
@@ -100,7 +100,7 @@ class UserCommandTest extends Unit
         $this->userRepository->method('findByCriteria')->willReturn([]);
         $this->entityManager->method('getRepository')
             ->willReturn($this->userRepository);
-        $command = new UserCommand($this->userService);
+        $command = new ResetPasswordCommand($this->userService);
         $output = $this->runCommand($command,[
             'email' => 'nobody@home.com',
             'newPassword' => 'irrelevant'
