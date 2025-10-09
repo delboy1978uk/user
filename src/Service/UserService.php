@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Del\Service;
 
 use DateTime;
+use DateTimeZone;
 use Del\Criteria\UserCriteria;
 use Del\Entity\EmailLink;
 use Del\Entity\User;
@@ -42,8 +43,10 @@ class UserService
         isset($data['email']) ? $user->setEmail($data['email']) : null;
         isset($data['password']) ? $user->setPassword($data['password']) : null;
         isset($data['state']) ? $user->setState(new State($data['state'])) : null;
-        isset($data['registrationDate']) ? $user->setRegistrationDate(new DateTime($data['registrationDate'])) : null;
         isset($data['lastLogin']) ? $user->setLastLogin(new DateTime($data['lastLogin'])) : null;
+        isset($data['registrationDate'])
+            ? $user->setRegistrationDate(new DateTime($data['registrationDate'], new DateTimeZone('UTC')))
+            : $user->setRegistrationDate(new DateTime('now'), new DateTimeZone('UTC'));
 
         return $user;
     }
@@ -156,7 +159,7 @@ class UserService
         $state = new State(State::STATE_UNACTIVATED);
         $user->setPerson($person);
         $user->setEmail($email);
-        $user->setRegistrationDate(new DateTime());
+        $user->setRegistrationDate(new DateTime('now', new DateTimeZone('UTC')));
         $user->setState($state);
         $bcrypt = new Bcrypt();
         $bcrypt->setCost(14);

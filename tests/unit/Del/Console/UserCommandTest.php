@@ -6,7 +6,7 @@ use Barnacle\Container;
 use Codeception\Test\Unit;
 use DateTime;
 use Del\Common\ContainerService;
-use Del\Console\UserCommand;
+use Del\Console\ResetPasswordCommand;
 use Del\Entity\User;
 use Del\Person\Entity\Person;
 use Del\Person\PersonPackage;

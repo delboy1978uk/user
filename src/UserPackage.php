@@ -7,6 +7,7 @@ namespace Del;
 use Barnacle\EntityRegistrationInterface;
 use Barnacle\RegistrationInterface;
 use Bone\Console\CommandRegistrationInterface;
+use Del\Console\ResetPasswordCommand;
 use Del\Console\UserCommand;
 use Del\Person\PersonPackage;
 use Del\Person\Service\PersonService;
@@ -37,7 +38,7 @@ class UserPackage implements RegistrationInterface, EntityRegistrationInterface,
     public function registerConsoleCommands(Container $container): array
     {
         $userService = $container->get(UserService::class);
-        $userCommand = new UserCommand($userService);
+        $userCommand = new ResetPasswordCommand($userService);
 
         return [$userCommand];
     }
