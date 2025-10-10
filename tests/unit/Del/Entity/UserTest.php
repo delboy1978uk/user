@@ -80,6 +80,7 @@ class UserTest extends \Codeception\Test\Unit
     {
         $this->user->setId(100);
         $person = new Person();
+        $person->setId(123);
         $person->setAka('Delboy');
         $this->user->setPerson($person);
         $this->user->setEmail('delboy1978uk@gmail.com');
