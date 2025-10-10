@@ -10,9 +10,8 @@
   ],
   "require": {
     "php": "^8.2",
-    "delboy1978uk/bone-console": "^1.5",
-    "delboy1978uk/person": "^6.6",
-    "laminas/laminas-crypt": "^3.3"
+    "delboy1978uk/bone-console": "^1.6",
+    "delboy1978uk/person": "^6.7",
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",

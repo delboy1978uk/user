@@ -19,7 +19,6 @@ use Del\Person\Service\PersonService;
 use Del\Value\User\State;
 use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
-use Laminas\Crypt\Password\Bcrypt;
 
 class UserService
 {
@@ -28,7 +27,7 @@ class UserService
 
     public function __construct(
         protected EntityManager $entityManager,
-        private  PersonService $personService
+        private  PersonService $personService,
     ) {
         $this->setUserClass(User::class);
     }
@@ -161,9 +160,7 @@ class UserService
         $user->setEmail($email);
         $user->setRegistrationDate(new DateTime('now', new DateTimeZone('UTC')));
         $user->setState($state);
-        $bcrypt = new Bcrypt();
-        $bcrypt->setCost(14);
-        $encryptedPassword = $bcrypt->create($password);
+        $encryptedPassword = $this->hashPassword($password);
         $user->setPassword($encryptedPassword);
         $this->saveUser($user);
 
@@ -172,9 +169,7 @@ class UserService
 
     public function changePassword(UserInterface $user, string $password): UserInterface
     {
-        $bcrypt = new Bcrypt();
-        $bcrypt->setCost(14);
-        $encryptedPassword = $bcrypt->create($password);
+        $encryptedPassword = $this->hashPassword($password);
         $user->setPassword($encryptedPassword);
         $this->saveUser($user);
 
@@ -246,10 +241,7 @@ class UserService
                 throw new UserException(UserException::USER_BANNED);
         }
 
-        $bcrypt = new Bcrypt();
-        $bcrypt->setCost(14);
-
-        if(!$bcrypt->verify($password, $user->getPassword())) {
+        if(!$this->verifyPassword($password, $user->getPassword())) {
             throw new UserException(UserException::WRONG_PASSWORD);
         }
 
@@ -270,10 +262,7 @@ class UserService
 
     public function checkPassword(UserInterface $user, string $password): bool
     {
-        $bcrypt = new Bcrypt();
-        $bcrypt->setCost(14);
-
-        return $bcrypt->verify($password, $user->getPassword());
+        return $this->verifyPassword($password, $user->getPassword());
     }
 
     public function setUserClass(string $fullyQualifiedClassName): void
@@ -290,5 +279,15 @@ class UserService
     public function getPersonSvc(): PersonService
     {
         return $this->personService;
+    }
+
+    private function hashPassword(string $password): string
+    {
+        return \password_hash($password, PASSWORD_BCRYPT, ['cost' => 14]);
+    }
+
+    private function verifyPassword(string $password, string $hash): bool
+    {
+        return \password_verify($password, $hash);
     }
 }
