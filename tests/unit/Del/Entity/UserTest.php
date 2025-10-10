@@ -3,6 +3,7 @@
 namespace Del\Entity;
 
 use DateTime;
+use Del\Factory\CountryFactory;
 use Del\Person\Entity\Person;
 use Del\Traits\HasUser;
 use Del\Value\User\State;
@@ -82,6 +83,8 @@ class UserTest extends \Codeception\Test\Unit
         $person = new Person();
         $person->setId(123);
         $person->setAka('Delboy');
+        $country = CountryFactory::generate('BE');
+        $person->setCountry($country);
         $this->user->setPerson($person);
         $this->user->setEmail('delboy1978uk@gmail.com');
         $this->user->setState(new State(State::STATE_ACTIVATED));
