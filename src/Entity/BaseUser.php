@@ -20,7 +20,7 @@ class BaseUser implements UserInterface
     #[ORM\Column(type: 'string', length: 50)]
     private string $email;
 
-    #[ORM\OneToOne(targetEntity: 'Del\Person\Entity\Person', cascade: ['persist'])]
+    #[ORM\OneToOne(targetEntity: Person::class, cascade: ['persist'])]
     private Person $person;
 
     #[ORM\Column(type: 'string', length: 100)]
