@@ -67,7 +67,7 @@ class UserCommandTest extends Unit
     public function testResetPass()
     {
         $this->entityManager->method('getRepository')
-            ->willReturn($this->personRepository, $this->userRepository, $this->personRepository);
+            ->willReturn($this->personRepository, $this->personRepository, $this->userRepository, $this->personRepository);
         $this->userRepository->method('findByCriteria')->willReturn([new User()]);
         $container = $this->container;
         /** @var PersonService $personSvc */
