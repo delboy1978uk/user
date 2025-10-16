@@ -9,7 +9,7 @@
     }
   ],
   "require": {
-    "php": "^8.2",
+    "php": "^8.4",
     "delboy1978uk/bone-console": "^1.6",
     "delboy1978uk/person": "^6.8"
   },
