@@ -11,7 +11,7 @@
   "require": {
     "php": "^8.2",
     "delboy1978uk/bone-console": "^1.6",
-    "delboy1978uk/person": "^6.7"
+    "delboy1978uk/person": "^6.8"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
@@ -22,11 +22,6 @@
     "psr-4": {
       "Del\\": "src/",
       "DelTesting\\": "tests/unit/Del/"
-    }
-  },
-  "config": {
-    "allow-plugins": {
-      "composer/package-versions-deprecated": true
     }
   }
 }
