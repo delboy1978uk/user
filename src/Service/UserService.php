@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Del\Service;
 
+use Bone\BoneDoctrine\Service\RestService;
 use DateTime;
 use DateTimeZone;
 use Del\Criteria\UserCriteria;
@@ -20,7 +21,7 @@ use Del\Value\User\State;
 use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
 
-class UserService
+class UserService extends RestService
 {
     private string $userClass;
     private UserRepository $userRepository;
@@ -30,6 +31,7 @@ class UserService
         private  PersonService $personService,
     ) {
         $this->setUserClass(User::class);
+        parent::__construct($this->entityManager);
     }
 
     public function createFromArray(array $data): UserInterface
@@ -289,5 +291,10 @@ class UserService
     private function verifyPassword(string $password, string $hash): bool
     {
         return \password_verify($password, $hash);
+    }
+
+    public function getEntityClass(): string
+    {
+        return $this->userClass;
     }
 }
