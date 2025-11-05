@@ -74,7 +74,7 @@ $user->setEmail('a@b.com');
 $user->setPassword($password); // Not encrypted - use the service which will in turn call this 
 $user->setState(new State(State::STATE_ACTIVATED)); 
 $user->setRegistrationDate($registrationDate); // A DateTime object
-$user->setLastLogin($registrationDate); // A DateTime object
+$user->setLastLoginDate($registrationDate); // A DateTime object
 $user->setPerson(new Person()); // See delboy1978uk/person
 ```
 The User lib also uses `delboy1978uk/person`, which you can use to store some personal details of the user, if you like. 

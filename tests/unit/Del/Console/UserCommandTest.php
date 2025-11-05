@@ -79,7 +79,7 @@ class UserCommandTest extends Unit
         $person = $personSvc->savePerson($person);
         $user = new User();
         $user->setEmail('test@123.com');
-        $user->setLastLogin(new DateTime());
+        $user->setLastLoginDate(new DateTime());
         $user->setRegistrationDate(new DateTime());
         $user->setPerson($person);
         $user->setState(new State(State::STATE_ACTIVATED));

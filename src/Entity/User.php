@@ -75,9 +75,15 @@ class User implements UserInterface
         $this->registrationDate = $registrationDate;
     }
 
+    /** @deprecated use setLastLoginDate */
     public function setLastLogin(DateTimeInterface $lastLogin): void
     {
-        $this->lastLoginDate = $lastLogin;
+        $this->setLastLoginDate($lastLogin);
+    }
+
+    public function setLastLoginDate(?DateTimeInterface $lastLoginDate): void
+    {
+        $this->lastLoginDate = $lastLoginDate;
     }
 
     public function toArray(): array

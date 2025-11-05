@@ -59,7 +59,7 @@ class UserTest extends \Codeception\Test\Unit
 
     public function testGetSetLastLoginDate()
     {
-        $this->user->setLastLogin(new DateTime('2015-01-12'));
+        $this->user->setLastLoginDate(new DateTime('2015-01-12'));
         $this->assertInstanceOf('DateTime',$this->user->getLastLoginDate());
         $this->assertEquals('2015-01-12',$this->user->getLastLoginDate()->format('Y-m-d'));
     }
@@ -89,7 +89,7 @@ class UserTest extends \Codeception\Test\Unit
         $this->user->setEmail('delboy1978uk@gmail.com');
         $this->user->setState(new State(State::STATE_ACTIVATED));
         $this->user->setRegistrationDate(new DateTime('1970-01-01'));
-        $this->user->setLastLogin(new DateTime('2015-01-12'));
+        $this->user->setLastLoginDate(new DateTime('2015-01-12'));
         $data = $this->user->toArray();
         $this->assertArrayHasKey('id', $data);
         $this->assertArrayHasKey('email', $data);

@@ -44,7 +44,7 @@ class UserService extends RestService
         isset($data['email']) ? $user->setEmail($data['email']) : null;
         isset($data['password']) ? $user->setPassword($data['password']) : null;
         isset($data['state']) ? $user->setState(new State($data['state'])) : null;
-        isset($data['lastLogin']) ? $user->setLastLogin(new DateTime($data['lastLogin'])) : null;
+        isset($data['lastLogin']) ? $user->setLastLoginDate(new DateTime($data['lastLogin'])) : null;
         isset($data['registrationDate'])
             ? $user->setRegistrationDate(new DateTime($data['registrationDate'], new DateTimeZone('UTC')))
             : $user->setRegistrationDate(new DateTime('now'), new DateTimeZone('UTC'));
