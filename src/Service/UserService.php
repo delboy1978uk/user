@@ -18,7 +18,7 @@ use Del\Repository\EmailLink as EmailLinkRepository;
 use Del\Repository\UserRepository;
 use Del\Person\Service\PersonService;
 use Del\Value\User\State;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 
 class UserService extends RestService
@@ -27,7 +27,7 @@ class UserService extends RestService
     private UserRepository $userRepository;
 
     public function __construct(
-        protected EntityManager $entityManager,
+        protected EntityManagerInterface $entityManager,
         private  PersonService $personService,
     ) {
         $this->setUserClass(User::class);
